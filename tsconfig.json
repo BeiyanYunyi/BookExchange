@@ -9,8 +9,16 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["esnext", "dom"]
+    "lib": ["esnext", "dom", "DOM.Iterable"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "frontend/src/**/*.tsx",
+    "frontend/src/**/*.vue",
+    "frontend/src/**/*.ts",
+    "frontend/src/**/*.d.ts",
+    "types/**/*.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

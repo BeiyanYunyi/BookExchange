@@ -3,3 +3,5 @@ node_modules
 .eslintrc.js
 vite.config.ts
 dist
+postcss.config.js
+tailwind.config.js
