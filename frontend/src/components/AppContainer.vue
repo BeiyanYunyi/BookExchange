@@ -13,6 +13,6 @@
   align-items: center;
 }
 .innerContainer {
-  max-width: 80vw;
+  max-width: 80rem;
 }
 </style>

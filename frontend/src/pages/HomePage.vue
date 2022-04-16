@@ -1,10 +1,7 @@
 <template>
-  <AppContainer>
-    <AppBooks :books="bookInfo" />
-  </AppContainer>
+  <AppBooks :books="bookInfo" />
 </template>
 <script setup lang="ts">
-import AppContainer from '../components/AppContainer.vue';
 import AppBooks from '../components/AppBooks.vue';
 import IFrontendBook from '../../../types/IFrontendBook';
 

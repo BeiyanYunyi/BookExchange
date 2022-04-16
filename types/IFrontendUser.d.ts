@@ -3,5 +3,6 @@ export default interface IFrontendUser {
   name: string;
   stuNum: string;
   collage: string;
+  class: string;
   avatar: string | null;
 }
