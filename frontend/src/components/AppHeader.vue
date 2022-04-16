@@ -20,7 +20,7 @@ import { NPageHeader, NAvatar, NCard } from 'naive-ui';
 .card {
   position: sticky;
   top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   z-index: 1;
   border-bottom: 1px solid var(--n-border-color);
 }
