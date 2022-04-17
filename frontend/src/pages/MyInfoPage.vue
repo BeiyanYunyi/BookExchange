@@ -54,11 +54,11 @@ import {
 } from 'naive-ui';
 import { useRouter } from 'vue-router';
 import { Person, LogOutOutline, ArrowBackOutline, CreateOutline } from '@vicons/ionicons5';
-import IFrontendUser from '../../../types/IFrontendUser';
 import AppContainer from '../components/AppContainer.vue';
+import IUserMe from '../../../types/IUserMe';
 
 const router = useRouter();
-const user: IFrontendUser = {
+const user: IUserMe = {
   id: '114514',
   name: '李北群',
   stuNum: '1145141919810',

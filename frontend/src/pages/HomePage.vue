@@ -14,9 +14,6 @@ const bookInfo: IFrontendBook[] = [
     owner: {
       id: '1919810',
       name: '李北群',
-      stuNum: '234567',
-      collage: '行政楼',
-      class: '1919',
       avatar: null,
     },
     tags: ['社科', '经典'],
@@ -30,9 +27,6 @@ const bookInfo: IFrontendBook[] = [
     owner: {
       id: '997696',
       name: '侯国玉',
-      stuNum: '234567',
-      collage: '马克思主义学院',
-      class: '1919',
       avatar: null,
     },
     tags: ['社科', '马克思主义'],

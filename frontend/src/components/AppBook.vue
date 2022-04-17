@@ -24,7 +24,7 @@
           </NButton>
         </NSpace>
       </template>
-      <template #action>由 {{ info.owner.collage }} 的 {{ info.owner.name }} 分享</template>
+      <template #action>由 {{ info.owner.name }} 分享</template>
     </NThing>
   </NCard>
 </template>
