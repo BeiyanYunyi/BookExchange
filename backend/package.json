@@ -7,7 +7,6 @@
     "dev": "ts-node src/index.ts",
     "clean": "rimraf dist"
   },
-  "packageManager": "pnpm@7.0.0-rc.3",
   "dependencies": {
     "@typegoose/typegoose": "^9.8.0",
     "@types/express-jwt": "^6.0.4",

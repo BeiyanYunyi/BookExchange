@@ -13,14 +13,10 @@
     "outDir": "dist"
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
     "frontend/src/**/*.tsx",
     "frontend/src/**/*.vue",
     "frontend/src/**/*.ts",
     "frontend/src/**/*.d.ts",
-    "backend/src/**/*.ts",
-    "backend/src/**/*.d.ts",
     "types/**/*.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
