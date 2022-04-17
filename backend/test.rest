@@ -10,6 +10,19 @@ Content-Type: application/json
 }
 
 ###
+POST http://127.0.0.1:3001/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "password": "114514",
+  "stuNum": "1145141919"
+}
+
+###
 GET http://127.0.0.1:3001/api/user/me HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IuadjuWMl-e-pCIsImlkIjoiNjI1YmNhNzc5MTRmOWM5ODJmZGUyYmFhIiwiaWF0IjoxNjUwMTgyNzc1MTM1fQ.6GfsjwfXCcFh2UflvwLWAw63fSMYdJpUOI1j6tzZUZA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWJjYTc3OTE0ZjljOTgyZmRlMmJhYSIsImlhdCI6MTY1MDE5NDk4OTY1MH0.GVgSdkFtonqjPcZR1CZTomlGEjGoWPOybhYOAh0KlSU
+
+###
+GET http://127.0.0.1:3001/api/auth/logout HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWJjYTc3OTE0ZjljOTgyZmRlMmJhYSIsImlhdCI6MTY1MDE5NDk4OTY1MH0.GVgSdkFtonqjPcZR1CZTomlGEjGoWPOybhYOAh0KlSU

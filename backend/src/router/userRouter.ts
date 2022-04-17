@@ -7,6 +7,7 @@ import config from '../../config/config.json';
 import UserModel, { UserRoleEnum } from '../models/UserModel';
 import expressjwtOptions from '../utils/expressJwtConstructor';
 import ConflictError from '../errors/ConflictError';
+import NotFoundError from '../errors/NotFoundError';
 
 require('express-async-errors');
 
@@ -42,7 +43,11 @@ userRouter.post('/', async (req, res) => {
 userRouter.use(expressJwt(expressjwtOptions));
 
 userRouter.get('/me', async (req, res) => {
-  res.json(req.user!);
+  const usr = await UserModel.findById(req.user!.id);
+  if (!usr) throw new NotFoundError('User Not Found');
+  const resBody = usr.toJSON();
+  const info = lodash.pick(resBody, ['name', 'status', 'stuNum', 'collage', 'class']);
+  res.json(info);
 });
 
 export default userRouter;

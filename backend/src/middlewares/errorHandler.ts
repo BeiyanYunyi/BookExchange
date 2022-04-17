@@ -33,6 +33,8 @@ const errorHandler = (
       return resToSend.status(404).send(error.message).end();
     case 'Unauthorized':
       return resToSend.status(401).send(error.message).end();
+    case 'UnauthorizedError':
+      return resToSend.status(401).send(error.message).end();
     default:
       break;
   }

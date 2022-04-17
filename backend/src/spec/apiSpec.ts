@@ -17,8 +17,8 @@ const apiSpec: OpenAPIV3.Document = {
                 required: ['name', 'password', 'stuNum', 'collage', 'class'],
                 properties: {
                   name: { type: 'string', nullable: false, minLength: 1, maxLength: 32 },
-                  password: { type: 'string', nullable: false, minLength: 6, maxLength: 32 },
-                  stuNum: { type: 'string', nullable: false, minLength: 8, maxLength: 16 },
+                  password: { $ref: '#/components/schemas/password' },
+                  stuNum: { $ref: '#/components/schemas/stuNum' },
                   collage: { type: 'string', nullable: false },
                   class: { type: 'string', nullable: false },
                 },
@@ -37,6 +37,33 @@ const apiSpec: OpenAPIV3.Document = {
         responses: { '200': { description: 'OK' } },
       },
     },
+    '/api/auth/login': {
+      post: {
+        summary: 'Login',
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['stuNum', 'password'],
+                properties: {
+                  stuNum: { $ref: '#/components/schemas/stuNum' },
+                  password: { $ref: '#/components/schemas/password' },
+                },
+              },
+            },
+          },
+        },
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/auth/logout': {
+      get: {
+        summary: 'Logout',
+        responses: { '200': { description: 'OK' } },
+      },
+    },
   },
   components: {
     schemas: {
@@ -45,6 +72,8 @@ const apiSpec: OpenAPIV3.Document = {
         description: 'A UUID.',
         pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$',
       },
+      password: { type: 'string', nullable: false, minLength: 6, maxLength: 32 },
+      stuNum: { type: 'string', nullable: false, minLength: 8, maxLength: 16 },
     },
     securitySchemes: { auth: { type: 'apiKey', in: 'header', name: 'Authorization' } },
   },

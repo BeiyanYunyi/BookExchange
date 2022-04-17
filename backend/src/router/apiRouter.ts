@@ -3,6 +3,7 @@ import * as OpenApiValidator from 'express-openapi-validator';
 import errorHandler from '../middlewares/errorHandler';
 import requestLogger from '../middlewares/requestLogger';
 import apiSpec from '../spec/apiSpec';
+import authRouter from './authRouter';
 import userRouter from './userRouter';
 
 require('express-async-errors');
@@ -14,6 +15,7 @@ apiRouter.use(
   OpenApiValidator.middleware({ apiSpec, validateResponses: false, validateApiSpec: true }),
 );
 apiRouter.use('/user', userRouter);
+apiRouter.use('/auth', authRouter);
 apiRouter.get('/', async (req, res) => {
   res.json({ message: 'Hello, BookExchange here, what do you want to do?' });
 });
