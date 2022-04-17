@@ -42,30 +42,25 @@
   </NCard>
 </template>
 <script setup lang="ts">
+import { ArrowBackOutline, CreateOutline, LogOutOutline, Person } from '@vicons/ionicons5';
 import {
-  NCard,
-  NH3,
   NAvatar,
-  NIcon,
+  NButton,
+  NCard,
   NDescriptions,
   NDescriptionsItem,
+  NH3,
+  NIcon,
   NSpace,
-  NButton,
 } from 'naive-ui';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import { Person, LogOutOutline, ArrowBackOutline, CreateOutline } from '@vicons/ionicons5';
 import AppContainer from '../components/AppContainer.vue';
-import IUserMe from '../../../types/IUserMe';
+import useAuthStore from '../stores/authState';
 
 const router = useRouter();
-const user: IUserMe = {
-  id: '114514',
-  name: '李北群',
-  stuNum: '1145141919810',
-  collage: '行政楼',
-  class: '89级4班',
-  avatar: null,
-};
+const authState = useAuthStore();
+const { user } = storeToRefs(authState);
 </script>
 
 <style module>

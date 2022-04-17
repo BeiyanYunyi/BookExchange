@@ -1,7 +1,6 @@
 import express from 'express';
 import expressJwt from 'express-jwt';
 import jwt from 'jsonwebtoken';
-import lodash from 'lodash';
 import NotFoundError from '../errors/NotFoundError';
 import UserModel from '../models/UserModel';
 import expressjwtOptions from '../utils/expressJwtConstructor';
@@ -16,13 +15,10 @@ authRouter.post('/login', async (req, res) => {
   const stu = await UserModel.findOne({ stuNum: body.stuNum });
   if (!stu) throw new NotFoundError('Student Number Not Found');
   const resBody = stu.toJSON();
-  const token = jwt.sign(
-    // eslint-disable-next-line no-underscore-dangle
-    { id: resBody._id, iat: Date.now() },
-    config.jwtSecret,
-  );
-  const info = lodash.pick(resBody, ['name', 'status', 'stuNum', 'collage', 'class']);
-  res.json({ info, token });
+  // eslint-disable-next-line no-underscore-dangle
+  const id = resBody._id;
+  const token = jwt.sign({ id, iat: Date.now() }, config.jwtSecret);
+  res.json({ token });
 });
 
 authRouter.use(expressJwt(expressjwtOptions));

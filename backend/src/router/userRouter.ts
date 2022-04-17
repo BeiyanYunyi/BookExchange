@@ -31,13 +31,11 @@ userRouter.post('/', async (req, res) => {
   });
   await user.save();
   const resBody = user.toJSON();
-  const token = jwt.sign(
-    // eslint-disable-next-line no-underscore-dangle
-    { id: resBody._id, iat: Date.now() },
-    config.jwtSecret,
-  );
-  const info = lodash.pick(resBody, ['name', 'status', 'stuNum', 'collage', 'class']);
-  res.json({ info, token });
+  // eslint-disable-next-line no-underscore-dangle
+  const id = resBody._id;
+  const token = jwt.sign({ id, iat: Date.now() }, config.jwtSecret);
+  const info = lodash.pick(resBody, ['name', 'status', 'stuNum', 'collage', 'class', 'avatar']);
+  res.json({ info: { ...info, id }, token });
 });
 
 userRouter.use(expressJwt(expressjwtOptions));
