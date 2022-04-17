@@ -1,0 +1,15 @@
+POST http://127.0.0.1:3001/api/user HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "李北群",
+  "password": "114514",
+  "stuNum": "1145141919",
+  "collage": "行政楼",
+  "class": "114班"
+}
+
+###
+GET http://127.0.0.1:3001/api/user/me HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IuadjuWMl-e-pCIsImlkIjoiNjI1YmNhNzc5MTRmOWM5ODJmZGUyYmFhIiwiaWF0IjoxNjUwMTgyNzc1MTM1fQ.6GfsjwfXCcFh2UflvwLWAw63fSMYdJpUOI1j6tzZUZA
