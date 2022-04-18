@@ -6,6 +6,7 @@ const root = process.cwd();
 const route = {
   root,
   logRoute: path.join(root, 'log'),
+  staticRoute: path.join(root, 'static'),
 };
 
 export default route;
