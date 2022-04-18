@@ -4,8 +4,7 @@
   "description": "The website of the book-exchanging project in my school",
   "version": "0.0.0",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "clean": "rimraf dist"
+    "start": "ts-node src/index.ts"
   },
   "dependencies": {
     "@typegoose/typegoose": "^9.8.0",
