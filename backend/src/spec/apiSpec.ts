@@ -61,6 +61,37 @@ const apiSpec: OpenAPIV3.Document = {
     '/api/auth/logout': {
       get: {
         summary: 'Logout',
+        security: [{ auth: ['auth'] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/book': {
+      post: {
+        summary: 'Submit a book',
+        security: [{ auth: ['auth'] }],
+        responses: { '200': { description: 'OK' } },
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['title', 'desc', 'author', 'tags', 'img'],
+                properties: {
+                  title: { type: 'string' },
+                  desc: { type: 'string' },
+                  author: { type: 'string' },
+                  tags: { type: 'array', items: { type: 'string' } },
+                  img: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      },
+      get: {
+        summary: 'Get all books',
+        security: [{ auth: ['auth'] }],
         responses: { '200': { description: 'OK' } },
       },
     },

@@ -5,7 +5,9 @@ export enum UserRoleEnum {
   admin = 1,
 }
 
-class User {
+export class User {
+  declare _id: string;
+
   @prop({ required: true })
   name!: string;
 

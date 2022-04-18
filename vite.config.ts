@@ -6,5 +6,5 @@ export default defineConfig({
   root: './frontend',
   plugins: [vue()],
   server: { proxy: { '/api': 'http://127.0.0.1:3001' } },
-  build: { outDir: '../backend/static' },
+  build: { outDir: '../backend/static', emptyOutDir: true },
 });

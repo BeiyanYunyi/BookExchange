@@ -1,7 +1,9 @@
-import { getModelForClass, prop } from '@typegoose/typegoose';
+/* eslint-disable no-underscore-dangle */
+import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
 import mongoose from 'mongoose';
+import { User } from './UserModel';
 
-enum BookStatusEnum {
+export enum BookStatusEnum {
   pending = 0,
   avaliable = 1,
   borrowed = 2,
@@ -19,11 +21,17 @@ class Book {
   @prop({ required: true })
   author!: string;
 
+  @prop({
+    required: true,
+    ref: () => User,
+  })
+  owner!: Ref<User>;
+
   @prop({ required: true, type: String, default: [] })
   tags!: mongoose.Types.Array<string>;
 
-  @prop({ default: null })
-  img!: string | null;
+  @prop({ default: '' })
+  img!: string;
 
   @prop({ enum: BookStatusEnum, required: true })
   status!: number;

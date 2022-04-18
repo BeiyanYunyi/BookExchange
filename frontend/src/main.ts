@@ -11,7 +11,9 @@ import HomePage from './pages/HomePage.vue';
 import LoginPage from './pages/LoginPage.vue';
 import MyInfoPage from './pages/MyInfoPage.vue';
 import RegisterPage from './pages/RegisterPage.vue';
+import axiosClient from './service/axiosClient';
 import useAuthStore from './stores/authState';
+import useInitStore from './stores/initState';
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -32,5 +34,18 @@ const routes: RouteRecordRaw[] = [
 
 const router = createRouter({ history: createWebHistory(), routes });
 
-app.use(router);
-app.mount('#app');
+const authState = useAuthStore();
+const initState = useInitStore();
+
+axiosClient
+  .login()
+  .then((res) => {
+    if (res) {
+      authState.$patch({ user: res, authed: true });
+    }
+    initState.$patch({ ready: true });
+  })
+  .then(() => {
+    app.use(router);
+    app.mount('#app');
+  });

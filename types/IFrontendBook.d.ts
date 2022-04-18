@@ -7,5 +7,6 @@ export default interface IFrontendBook {
   author: string;
   owner: IFrontendUser;
   tags: string[];
-  img: string | null;
+  img: string;
+  status: 0 | 1 | 2 | 3 | 4;
 }

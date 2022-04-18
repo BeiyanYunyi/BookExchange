@@ -21,8 +21,25 @@ Content-Type: application/json
 ###
 GET http://127.0.0.1:3001/api/user/me HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWJjYTc3OTE0ZjljOTgyZmRlMmJhYSIsImlhdCI6MTY1MDE5NDk4OTY1MH0.GVgSdkFtonqjPcZR1CZTomlGEjGoWPOybhYOAh0KlSU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
 
 ###
 GET http://127.0.0.1:3001/api/auth/logout HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWJjYTc3OTE0ZjljOTgyZmRlMmJhYSIsImlhdCI6MTY1MDE5NDk4OTY1MH0.GVgSdkFtonqjPcZR1CZTomlGEjGoWPOybhYOAh0KlSU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
+
+###
+POST http://127.0.0.1:3001/api/book HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
+
+{
+  "title": "家庭、私有制和国家的起源",
+  "desc": "123",
+  "author": "123",
+  "tags": [],
+  "img": ""
+}
+
+###
+GET http://127.0.0.1:3001/api/book HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ

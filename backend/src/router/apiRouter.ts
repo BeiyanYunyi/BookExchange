@@ -4,6 +4,7 @@ import errorHandler from '../middlewares/errorHandler';
 import requestLogger from '../middlewares/requestLogger';
 import apiSpec from '../spec/apiSpec';
 import authRouter from './authRouter';
+import bookRouter from './bookRouer';
 import userRouter from './userRouter';
 
 require('express-async-errors');
@@ -16,6 +17,7 @@ apiRouter.use(
 );
 apiRouter.use('/user', userRouter);
 apiRouter.use('/auth', authRouter);
+apiRouter.use('/book', bookRouter);
 apiRouter.get('/', async (req, res) => {
   res.json({ message: 'Hello, BookExchange here, what do you want to do?' });
 });
