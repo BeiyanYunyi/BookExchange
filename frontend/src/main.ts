@@ -27,7 +27,7 @@ const requireAuth: NavigationGuardWithThis<undefined> = (to, from, next) => {
 };
 
 const routes: RouteRecordRaw[] = [
-  { path: '/', component: HomePage, beforeEnter: requireAuth },
+  { path: '/', component: HomePage },
   { path: '/me', component: MyInfoPage, beforeEnter: requireAuth },
   { path: '/login', component: LoginPage },
   { path: '/register', component: RegisterPage },

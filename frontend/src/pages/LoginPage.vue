@@ -7,11 +7,11 @@
       <NFormItem path="password" label="密码">
         <NInput v-model:value="model.password" type="password" placeholder="请输入密码" />
       </NFormItem>
+      <NSpace justify="center">
+        <NButton attr-type="submit" type="primary" @click="handleLogin">登录</NButton>
+        <NButton type="tertiary" @click="router.replace('/login')">去注册</NButton>
+      </NSpace>
     </NForm>
-    <NSpace justify="center">
-      <NButton type="primary" @click="handleLogin">登录</NButton>
-      <NButton type="tertiary" @click="router.replace('/login')">去注册</NButton>
-    </NSpace>
   </NCard>
 </template>
 <script setup lang="ts">

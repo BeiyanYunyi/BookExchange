@@ -51,15 +51,23 @@ const getMethodColor: (method: THTTPMethod) => keyof colors.Color = (method) => 
 
 const myConsoleFormat = printf(({ level, message, label, timestamp, statusCode, method }) => {
   const levelStr = getLevelColor(level as TLevel);
-  const statusColor = (statusCode?.toString() as string | undefined)?.startsWith('2')
-    ? 'bgGreen'
-    : 'bgRed';
+  let statusColor = 'bgRed';
+  if ((statusCode?.toString() as string | undefined)?.startsWith('1')) {
+    statusColor = 'bgBlue';
+  }
+  if ((statusCode?.toString() as string | undefined)?.startsWith('2')) {
+    statusColor = 'bgGreen';
+  }
+  if ((statusCode?.toString() as string | undefined)?.startsWith('3')) {
+    statusColor = 'bgGrey';
+  }
   let strToReturn = label + colors.underline(formatDate(timestamp));
   if (level !== 'http') {
     // colors.js is not fully typed, so sad.
     /* @ts-ignore */
     strToReturn += ` ${colors[levelStr](`[${level.toUpperCase()}]`)}`;
   } else {
+    /* @ts-ignore */
     strToReturn += ` ${colors[getMethodColor(method as THTTPMethod)](`[${method}]`)} ${colors[
       statusColor
     ](`${statusCode}`)}`;

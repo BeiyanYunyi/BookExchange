@@ -1,13 +1,8 @@
 <template>
-  <NCard hoverable>
-    <AppContainer>
-      <NAvatar v-if="user.avatar" :size="128" circle :src="user.avatar" />
-      <NAvatar v-else :size="128" circle>
-        <NIcon>
-          <Person />
-        </NIcon>
-      </NAvatar>
-    </AppContainer>
+  <NCard hoverable size="huge">
+    <NSpace>
+      <UserAvatar :size="128" />
+    </NSpace>
     <NH3 align-text :class="$style.name">{{ user.name }}</NH3>
     <NDescriptions :column="1" label-placement="left">
       <NDescriptionsItem label="学号">
@@ -22,9 +17,9 @@
     </NDescriptions>
     <template #action>
       <NSpace justify="center">
-        <NButton circle type="tertiary" @click="router.back()">
+        <NButton circle type="tertiary" @click="router.push('/')">
           <NIcon>
-            <ArrowBackOutline />
+            <HomeOutline />
           </NIcon>
         </NButton>
         <NButton circle type="tertiary">
@@ -32,35 +27,51 @@
             <CreateOutline />
           </NIcon>
         </NButton>
-        <NButton circle ghost type="error">
-          <NIcon>
-            <LogOutOutline />
-          </NIcon>
-        </NButton>
+        <NPopconfirm
+          positive-text="确认"
+          negative-text="取消"
+          :positive-button-props="{ type: 'warning' }"
+          :negative-button-props="{ type: 'tertiary' }"
+          @positive-click="handleLogoutConfirm"
+        >
+          <template #trigger>
+            <NButton circle ghost type="error">
+              <NIcon>
+                <LogOutOutline />
+              </NIcon>
+            </NButton>
+          </template>
+          确认退出登录吗？
+        </NPopconfirm>
       </NSpace>
     </template>
   </NCard>
 </template>
 <script setup lang="ts">
-import { ArrowBackOutline, CreateOutline, LogOutOutline, Person } from '@vicons/ionicons5';
+import { CreateOutline, HomeOutline, LogOutOutline } from '@vicons/ionicons5';
 import {
-  NAvatar,
   NButton,
   NCard,
   NDescriptions,
   NDescriptionsItem,
   NH3,
   NIcon,
+  NPopconfirm,
   NSpace,
 } from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import AppContainer from '../components/AppContainer.vue';
+import UserAvatar from '../components/UserAvatar.vue';
 import useAuthStore from '../stores/authState';
 
 const router = useRouter();
 const authState = useAuthStore();
 const { user } = storeToRefs(authState);
+const handleLogoutConfirm = async () => {
+  authState.$patch({ authed: false });
+  localStorage.removeItem('authToken');
+  router.replace('/');
+};
 </script>
 
 <style module>

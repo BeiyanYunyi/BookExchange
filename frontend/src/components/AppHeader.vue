@@ -5,15 +5,16 @@
         <div :class="$style.title" @click="router.push('/')">阅读益行</div>
       </template>
       <template #avatar>
-        <NAvatar circle src="/头像圆.png" :class="$style.avatar" @click="router.push('/me')" />
+        <UserAvatar circle src="/头像圆.png" :class="$style.avatar" @click="router.push('/me')" />
       </template>
     </NPageHeader>
   </NCard>
 </template>
 
 <script setup lang="ts">
-import { NPageHeader, NAvatar, NCard } from 'naive-ui';
+import { NCard, NPageHeader } from 'naive-ui';
 import { useRouter } from 'vue-router';
+import UserAvatar from './UserAvatar.vue';
 
 const router = useRouter();
 </script>
