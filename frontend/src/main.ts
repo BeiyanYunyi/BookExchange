@@ -19,11 +19,8 @@ app.use(pinia);
 
 const requireAuth: NavigationGuardWithThis<undefined> = (to, from, next) => {
   const authState = useAuthStore();
-  if (!authState.authed) {
-    next({ path: '/login', query: { redirect: to.fullPath } });
-  } else {
-    next();
-  }
+  if (!authState.authed) return next({ path: '/login', query: { redirect: to.fullPath } });
+  return next();
 };
 
 const routes: RouteRecordRaw[] = [

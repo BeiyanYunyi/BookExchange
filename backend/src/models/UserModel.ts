@@ -16,7 +16,7 @@ class User {
   avatar!: string | null;
 
   @prop({ enum: UserRoleEnum, required: true })
-  status!: number;
+  role!: number;
 
   @prop({ unique: true, index: true })
   stuNum!: string;

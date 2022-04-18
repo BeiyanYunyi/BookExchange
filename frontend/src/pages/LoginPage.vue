@@ -9,7 +9,7 @@
       </NFormItem>
       <NSpace justify="center">
         <NButton attr-type="submit" type="primary" @click="handleLogin">登录</NButton>
-        <NButton type="tertiary" @click="router.replace('/login')">去注册</NButton>
+        <NButton type="tertiary" @click="router.replace('/register')">去注册</NButton>
       </NSpace>
     </NForm>
   </NCard>
@@ -62,6 +62,7 @@ const handleLogin = async () => {
   const res = await axiosClient.login(model.value.password, model.value.stuNum);
   if (!res) return message.error('登录失败，请检查用户名或密码是否正确');
   authStore.$patch({ user: res, authed: true });
+  message.success('登录成功');
   return router.replace((route.query.redirect as string) || '/');
 };
 </script>
