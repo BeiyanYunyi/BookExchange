@@ -12,11 +12,25 @@
 </template>
 
 <script setup lang="ts">
-import { NCard, NPageHeader } from 'naive-ui';
+import { NCard, NPageHeader, useLoadingBar } from 'naive-ui';
+import { storeToRefs } from 'pinia';
+import { watch } from 'vue';
 import { useRouter } from 'vue-router';
+import useLoadingStore from '../stores/loadingState';
 import UserAvatar from './UserAvatar.vue';
 
+const loadingBar = useLoadingBar();
 const router = useRouter();
+const loadingState = useLoadingStore();
+const { loading } = storeToRefs(loadingState);
+
+watch(loading, (newLoading, oldLoading) => {
+  if (newLoading) {
+    loadingBar.start();
+  } else if (oldLoading) {
+    loadingBar.finish();
+  }
+});
 </script>
 
 <style module>

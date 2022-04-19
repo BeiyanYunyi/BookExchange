@@ -6,8 +6,8 @@ import { User } from './UserModel';
 export enum BookStatusEnum {
   pending = 0,
   avaliable = 1,
-  borrowed = 2,
-  returned = 3,
+  ordered = 2,
+  borrowed = 3,
   lost = 4,
 }
 

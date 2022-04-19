@@ -2,7 +2,7 @@
   <NaiveContainer>
     <AppHeader />
     <AppContainer>
-      <RouterView v-if="initState.ready" />
+      <RouterView />
     </AppContainer>
     <AppFooter />
   </NaiveContainer>
@@ -14,7 +14,4 @@ import AppContainer from './components/AppContainer.vue';
 import AppFooter from './components/AppFooter.vue';
 import AppHeader from './components/AppHeader.vue';
 import NaiveContainer from './components/NaiveContainer.vue';
-import useInitStore from './stores/initState';
-
-const initState = useInitStore();
 </script>

@@ -1,8 +1,10 @@
 <template>
   <NConfigProvider :theme="osThemeRef === 'dark' ? darkTheme : lightTheme">
     <NMessageProvider>
-      <NGlobalStyle />
-      <slot />
+      <NLoadingBarProvider>
+        <NGlobalStyle />
+        <slot />
+      </NLoadingBarProvider>
     </NMessageProvider>
   </NConfigProvider>
 </template>
@@ -11,6 +13,7 @@ import {
   darkTheme,
   lightTheme,
   NConfigProvider,
+  NLoadingBarProvider,
   NGlobalStyle,
   useOsTheme,
   NMessageProvider,
