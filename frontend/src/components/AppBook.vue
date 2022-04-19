@@ -24,7 +24,7 @@
           </NButton>
         </NSpace>
       </template>
-      <template #action>由 {{ info.owner.name }} 分享</template>
+      <template #action>由 {{ info.owner.name }} 分享，状态：{{ bookStatus }}</template>
     </NThing>
   </NCard>
 </template>
@@ -34,5 +34,20 @@ import IFrontendBook from '../../../types/IFrontendBook';
 
 const imgWidth = window.innerWidth * 0.08 < 50 ? 50 : window.innerWidth * 0.08;
 
-defineProps<{ info: IFrontendBook }>();
+const props = defineProps<{ info: IFrontendBook }>();
+
+const bookStatus = (() => {
+  switch (props.info.status) {
+    case 0:
+      return '待确认';
+    case 2:
+      return '已预定';
+    case 3:
+      return '已借出';
+    case 4:
+      return '已丢失';
+    default:
+      return '可借阅';
+  }
+})();
 </script>

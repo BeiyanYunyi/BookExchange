@@ -27,6 +27,11 @@ class Book {
   })
   owner!: Ref<User>;
 
+  @prop({
+    ref: () => User,
+  })
+  orderBy!: Ref<User>;
+
   @prop({ required: true, type: String, default: [] })
   tags!: mongoose.Types.Array<string>;
 

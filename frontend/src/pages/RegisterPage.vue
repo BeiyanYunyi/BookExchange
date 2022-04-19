@@ -1,6 +1,6 @@
 <template>
   <NCard title="注册" size="huge">
-    <NForm ref="formRef" :model="model" :rules="rules">
+    <NForm :model="model" :rules="rules">
       <NFormItem path="stuNum" label="学号">
         <NInput v-model:value="model.stuNum" placeholder="请输入学号" />
       </NFormItem>
@@ -27,7 +27,6 @@
 </template>
 <script setup lang="ts">
 import {
-  FormInst,
   FormItemRule,
   FormRules,
   NButton,
@@ -46,7 +45,6 @@ import useAuthStore from '../stores/authState';
 const router = useRouter();
 const route = useRoute();
 const message = useMessage();
-const formRef = ref<FormInst | null>();
 const initState: IRegisterInfo = { name: '', password: '', stuNum: '', collage: '', class: '' };
 const model = ref<IRegisterInfo>(initState);
 const rules: FormRules = {

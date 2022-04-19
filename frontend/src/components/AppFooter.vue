@@ -25,6 +25,7 @@ import { NLayout, NA, NP, NDescriptions, NDescriptionsItem } from 'naive-ui';
 }
 .footer {
   margin-top: 0.5rem;
+  height: 30vh;
 }
 .description {
   margin: 1rem 1rem 0 1rem;

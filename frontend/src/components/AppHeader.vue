@@ -37,6 +37,7 @@ watch(loading, (newLoading, oldLoading) => {
 .header {
   padding: 1rem;
 }
+
 .card {
   position: sticky;
   top: 0;
@@ -48,6 +49,7 @@ watch(loading, (newLoading, oldLoading) => {
 .avatar {
   cursor: pointer;
 }
+
 .title {
   cursor: pointer;
 }
