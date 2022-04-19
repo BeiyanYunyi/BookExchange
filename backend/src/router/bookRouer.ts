@@ -20,7 +20,12 @@ bookRouter.post('/', async (req, res) => {
   const {
     body,
   }: { body: { title: string; desc: string; author: string; tags: string[]; img: string } } = req;
-  const book = new BookModel({ ...body, status: 0, owner: user });
+  const book = new BookModel({
+    ...body,
+    status: 0,
+    owner: user,
+    tags: Array.from(new Set(body.tags)),
+  });
   await book.save();
   const bookToReturn = lodash.pick(book.toJSON(), [
     'title',
