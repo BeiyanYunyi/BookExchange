@@ -81,7 +81,7 @@ const apiSpec: OpenAPIV3.Document = {
                   title: { type: 'string' },
                   desc: { type: 'string' },
                   author: { type: 'string' },
-                  tags: { type: 'array', items: { type: 'string' } },
+                  tags: { type: 'array', items: { type: 'string' }, maxItems: 5 },
                   img: { type: 'string' },
                 },
               },
