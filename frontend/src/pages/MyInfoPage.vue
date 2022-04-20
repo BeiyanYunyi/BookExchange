@@ -49,6 +49,7 @@
 </template>
 <script setup lang="ts">
 import { CreateOutline, HomeOutline, LogOutOutline } from '@vicons/ionicons5';
+import axios from 'axios';
 import {
   NButton,
   NCard,
@@ -62,6 +63,7 @@ import {
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import UserAvatar from '../components/UserAvatar.vue';
+import axiosClient from '../service/axiosClient';
 import useAuthStore from '../stores/authState';
 
 const router = useRouter();
@@ -70,6 +72,7 @@ const { user } = storeToRefs(authState);
 const handleLogoutConfirm = async () => {
   authState.$patch({ authed: false });
   localStorage.removeItem('authToken');
+  axiosClient.changeClient(axios.create());
   router.replace('/');
 };
 </script>

@@ -25,8 +25,7 @@
         </NSpace>
       </template>
       <template #action>
-        由 {{ info.owner.id === authState.user.id ? '你' : info.owner.name }} 分享，状态：{{
-          bookStatus
+        由 {{ info.owner.name }} 分享，状态：{{ bookStatus
         }}{{ info.orderBy ? `（预定者：${info.orderBy.name}）` : '' }}
       </template>
     </NThing>
@@ -55,11 +54,12 @@
   </NCard>
 </template>
 <script setup lang="ts">
-import { NButton, NCard, NImage, NSpace, NThing, NIcon, useMessage } from 'naive-ui';
 import { CheckmarkDoneOutline, ReturnUpBackOutline } from '@vicons/ionicons5';
+import { NButton, NCard, NIcon, NImage, NSpace, NThing, useMessage } from 'naive-ui';
+import { ref, watch } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
-import useAuthStore from '../stores/authState';
 import orderBook from '../service/orderBook';
+import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
 
 const imgWidth = window.innerWidth * 0.08 < 50 ? 50 : window.innerWidth * 0.08;
@@ -67,7 +67,7 @@ const props = defineProps<{ info: IFrontendBook }>();
 const authState = useAuthStore();
 const bookState = useBooksStore();
 const message = useMessage();
-const bookStatus = (() => {
+const getStatus = () => {
   switch (props.info.status) {
     case 0:
       return '待确认';
@@ -81,8 +81,13 @@ const bookStatus = (() => {
       if (props.info.owner.id !== authState.user.id) return '可预定';
       return '等待预定';
   }
-})();
+};
+const bookStatus = ref(getStatus());
+watch(props, () => {
+  bookStatus.value = getStatus();
+});
 const handlePatch = async () => {
+  if (!authState.authed) return message.error('请先登录');
   const res = await orderBook(props.info);
   if (!res) return message.error('操作失败');
   if (res.orderBy) {

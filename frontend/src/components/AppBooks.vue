@@ -2,7 +2,10 @@
   <AddBookModel ref="addBookModelRef" />
   <NSpace vertical justify="center" style="min-height: 70vh">
     <NSpace justify="center">
-      <NButton dashed @click="addBookModelRef?.open()">
+      <NButton
+        dashed
+        @click="authState.authed ? addBookModelRef?.open() : message.error('请先登录')"
+      >
         <template #icon>
           <NIcon>
             <AddOutline />
@@ -29,13 +32,16 @@
 </template>
 <script setup lang="ts">
 import { AddOutline } from '@vicons/ionicons5';
-import { NButton, NEmpty, NIcon, NSpace } from 'naive-ui';
+import { NButton, NEmpty, NIcon, NSpace, useMessage } from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
+import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
 import AddBookModel from './AddBookModel.vue';
 import AppBook from './AppBook.vue';
 
+const message = useMessage();
+const authState = useAuthStore();
 const booksState = useBooksStore();
 const { books: bookInfo } = storeToRefs(booksState);
 const addBookModelRef = ref<InstanceType<typeof AddBookModel> | null>(null);
