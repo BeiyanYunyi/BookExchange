@@ -2,9 +2,13 @@
 import express from 'express';
 import expressJwt, { UnauthorizedError } from 'express-jwt';
 import lodash from 'lodash';
-import BookModel from '../models/BookModel';
-import UserModel, { User } from '../models/UserModel';
+import BadRequestError from '../errors/BadRequestError';
+import ConflictError from '../errors/ConflictError';
+import NotFoundError from '../errors/NotFoundError';
+import BookModel, { Book } from '../models/BookModel';
+import UserModel from '../models/UserModel';
 import expressJwtOptions from '../utils/expressJwtConstructor';
+import userParser from '../utils/userParser';
 
 require('express-async-errors');
 
@@ -37,16 +41,12 @@ bookRouter.post('/', async (req, res) => {
   ]);
   res.json({
     ...bookToReturn,
-    owner: {
-      id: (book.owner as User)._id,
-      name: (book.owner as User).name,
-      avatar: (book.owner as User).avatar,
-    },
+    owner: userParser(book.owner),
   });
 });
 
 bookRouter.get('/', async (req, res) => {
-  const books = (await BookModel.find().populate('owner')).map((book) => {
+  const books = (await BookModel.find().populate('owner').populate('orderBy')).map((book) => {
     const bookToReturn = lodash.pick(book.toJSON(), [
       'title',
       'desc',
@@ -57,14 +57,90 @@ bookRouter.get('/', async (req, res) => {
     ]);
     return {
       ...bookToReturn,
-      owner: {
-        id: (book.owner as User)._id,
-        name: (book.owner as User).name,
-        avatar: (book.owner as User).avatar,
-      },
+      id: book._id,
+      owner: userParser(book.owner),
+      orderBy: userParser(book.orderBy),
     };
   });
   res.json(books);
+});
+
+/** 预定 / 取消预定 */
+bookRouter.patch('/:bookID', async (req, res) => {
+  const { id } = req.user!;
+  const [user, book] = await Promise.all([
+    UserModel.findById(id),
+    BookModel.findById(req.params.bookID),
+  ]);
+  if (!user)
+    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  if (!book) throw new NotFoundError('[404] Book not found');
+  // 书本既不可预定又不已预定，或预定者是捐赠者本人
+  if ((book.status !== 1 && book.status !== 2) || book.owner!.toString() === id)
+    throw new BadRequestError('[400] You cannot order that!');
+  // 书本已预定，且预定者不是本人
+  if (book.status === 2 && book.orderBy!.toString() !== id)
+    throw new ConflictError('[409] The book was ordered.');
+  if (book.status === 1) {
+    const [orderedBooks, committedBooks] = await Promise.all([
+      BookModel.count({ orderBy: id }),
+      BookModel.count({ owner: id, status: { $gte: 1 } }),
+    ]);
+    if (orderedBooks >= committedBooks)
+      throw new BadRequestError('[400] You have ordered the max amount of books');
+    book.orderBy = user;
+    book.status = 2;
+  } else {
+    book.orderBy = undefined;
+    book.status = 1;
+  }
+  await book.save();
+  const savedBook = (await BookModel.findById(req.params.bookID)
+    .populate('owner')
+    .populate('orderBy'))!;
+  const bookToReturn = lodash.pick(savedBook.toJSON(), [
+    'title',
+    'desc',
+    'author',
+    'tags',
+    'img',
+    'status',
+  ]);
+  res.json({
+    ...bookToReturn,
+    id: savedBook._id,
+    owner: userParser(savedBook!.owner),
+    orderBy: userParser(savedBook!.orderBy),
+  });
+});
+
+bookRouter.put('/:bookID', async (req, res) => {
+  const { id } = req.user!;
+  const [user, book] = await Promise.all([
+    UserModel.findById(id),
+    BookModel.findById(req.params.bookID),
+  ]);
+  if (!user || user.role !== 1)
+    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  if (!book) throw new NotFoundError('[404] Book not found');
+  const { body } = req as { body: Partial<Book> };
+  const updatedBook = await BookModel.findByIdAndUpdate(req.params.bookID, body, { new: true })
+    .populate('owner')
+    .populate('orderBy');
+  const bookToReturn = lodash.pick(updatedBook!.toJSON(), [
+    'title',
+    'desc',
+    'author',
+    'tags',
+    'img',
+    'status',
+  ]);
+  res.json({
+    ...bookToReturn,
+    id: updatedBook!._id,
+    owner: userParser(updatedBook!.owner),
+    orderBy: userParser(updatedBook!.orderBy),
+  });
 });
 
 export default bookRouter;

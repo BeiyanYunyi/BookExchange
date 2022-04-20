@@ -8,6 +8,7 @@ import UserModel, { UserRoleEnum } from '../models/UserModel';
 import expressjwtOptions from '../utils/expressJwtConstructor';
 import ConflictError from '../errors/ConflictError';
 import NotFoundError from '../errors/NotFoundError';
+import BookModel from '../models/BookModel';
 
 require('express-async-errors');
 
@@ -41,13 +42,23 @@ userRouter.post('/', async (req, res) => {
 userRouter.use(expressJwt(expressjwtOptions));
 
 userRouter.get('/me', async (req, res) => {
-  const usr = await UserModel.findById(req.user!.id);
-  if (!usr) throw new NotFoundError('User Not Found');
-  const resBody = usr.toJSON();
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new NotFoundError('User Not Found');
+  const resBody = user.toJSON();
   // eslint-disable-next-line no-underscore-dangle
   const id = resBody._id;
   const info = lodash.pick(resBody, ['name', 'role', 'stuNum', 'collage', 'class', 'avatar']);
   res.json({ ...info, id });
+});
+
+userRouter.get('/balance', async (req, res) => {
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new NotFoundError('User Not Found');
+  const [orderedBooks, committedBooks] = await Promise.all([
+    BookModel.count({ orderBy: user.id }),
+    BookModel.count({ owner: user.id, status: { $gte: 1 } }),
+  ]);
+  res.json({ orderedBooks, committedBooks });
 });
 
 export default userRouter;

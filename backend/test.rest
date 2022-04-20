@@ -4,7 +4,7 @@ Content-Type: application/json
 {
   "name": "李北群",
   "password": "114514",
-  "stuNum": "1145141919",
+  "stuNum": "114514364364",
   "collage": "行政楼",
   "class": "114班"
 }
@@ -20,6 +20,11 @@ Content-Type: application/json
 
 ###
 GET http://127.0.0.1:3001/api/user/me HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
+
+###
+GET http://127.0.0.1:3001/api/user/balance HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
 
@@ -43,3 +48,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1Z
 ###
 GET http://127.0.0.1:3001/api/book HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
+
+###
+PUT http://127.0.0.1:3001/api/book/625d14e9389ff39752fb9e99 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
+Content-Type: application/json
+
+{"status":1}
+
+###
+PATCH http://127.0.0.1:3001/api/book/625ec42be4d71dda91f664d6 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWY4MWYxNWY2MzBmMmM2YWMwNjVkNiIsImlhdCI6MTY1MDQyNjM1MzM3NH0.njQ3XRjWOQLutUTM7RVN_I_5K4p8cZ0x8KURvNGvaPU

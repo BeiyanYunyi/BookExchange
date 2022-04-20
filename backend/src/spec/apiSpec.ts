@@ -37,6 +37,7 @@ const apiSpec: OpenAPIV3.Document = {
         responses: { '200': { description: 'OK' } },
       },
     },
+    '/api/user/balance': { get: { responses: { '200': { description: 'OK' } } } },
     '/api/auth/login': {
       post: {
         summary: 'Login',
@@ -91,6 +92,26 @@ const apiSpec: OpenAPIV3.Document = {
       },
       get: {
         summary: 'Get all books',
+        security: [{ auth: ['auth'] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/book/{bookID}': {
+      parameters: [
+        {
+          description: 'The ID of book',
+          name: 'bookID',
+          in: 'path',
+          required: true,
+          schema: { type: 'string', maxLength: 32, minLength: 20 },
+        },
+      ],
+      put: {
+        security: [{ auth: ['auth'] }],
+        responses: { '200': { description: 'OK' } },
+        requestBody: { content: { 'application/json': { schema: { type: 'object' } } } },
+      },
+      patch: {
         security: [{ auth: ['auth'] }],
         responses: { '200': { description: 'OK' } },
       },

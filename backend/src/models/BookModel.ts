@@ -11,7 +11,7 @@ export enum BookStatusEnum {
   lost = 4,
 }
 
-class Book {
+export class Book {
   @prop({ required: true })
   title!: string;
 
