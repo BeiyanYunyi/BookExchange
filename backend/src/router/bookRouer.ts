@@ -1,21 +1,35 @@
 /* eslint-disable no-underscore-dangle */
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import expressJwt, { UnauthorizedError } from 'express-jwt';
 import lodash from 'lodash';
 import BadRequestError from '../errors/BadRequestError';
 import ConflictError from '../errors/ConflictError';
 import NotFoundError from '../errors/NotFoundError';
 import BookModel, { Book } from '../models/BookModel';
-import UserModel from '../models/UserModel';
+import UserModel, { User } from '../models/UserModel';
 import expressJwtOptions from '../utils/expressJwtConstructor';
 import userParser from '../utils/userParser';
+import logger from '../utils/logger';
 
 require('express-async-errors');
 
 const bookRouter = express.Router();
 
 bookRouter.get('/', async (req, res) => {
-  const books = (await BookModel.find().populate('owner')).map((book) => {
+  let reqUser: User | null = null;
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    try {
+      const user = jwt.decode(req.headers.authorization.replace('Bearer ', '')) as Express.User;
+      const userInDB = await UserModel.findById(user.id);
+      if (userInDB !== null && user.iat >= Number(userInDB.lastRevokeTime)) {
+        reqUser = userInDB;
+      }
+    } catch (e) {
+      logger.error(e);
+    }
+  }
+  const books = (await BookModel.find().populate('owner').populate('orderBy')).map((book) => {
     const bookToReturn = lodash.pick(book.toJSON(), [
       'title',
       'desc',
@@ -28,7 +42,12 @@ bookRouter.get('/', async (req, res) => {
       ...bookToReturn,
       id: book._id,
       owner: userParser(book.owner),
-      orderBy: userParser(book.orderBy),
+      orderBy: userParser(
+        reqUser?.role === 1 ||
+          (book.orderBy && reqUser?._id.toString() === (book.orderBy as User)._id.toString())
+          ? book.orderBy
+          : undefined,
+      ),
     };
   });
   res.json(books);
