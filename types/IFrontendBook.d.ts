@@ -6,7 +6,7 @@ export default interface IFrontendBook {
   desc: string;
   author: string;
   owner: IFrontendUser;
-  orderedBy?: IFrontendUser;
+  orderBy?: IFrontendUser;
   tags: string[];
   img: string;
   status: 0 | 1 | 2 | 3 | 4;

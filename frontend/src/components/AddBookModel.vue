@@ -51,6 +51,7 @@ import {
 import { CloseOutline } from '@vicons/ionicons5';
 import { ref } from 'vue';
 import addBook, { IAddBookParam } from '../service/addBook';
+import useBooksStore from '../stores/booksState';
 
 const message = useMessage();
 const showModel = ref(false);
@@ -64,14 +65,14 @@ const rules: FormRules = {
 const open = () => {
   showModel.value = true;
 };
+const bookState = useBooksStore();
 
-const props = defineProps<{ refresh: () => Promise<void> }>();
 defineExpose<{ open: () => void }>({ open });
 
 const handleSubmit = async () => {
   try {
     await addBook({ ...formModel.value, tags: tags.value });
-    await props.refresh();
+    await bookState.refresh();
     message.success('感谢您的贡献');
     showModel.value = false;
   } catch (e) {
