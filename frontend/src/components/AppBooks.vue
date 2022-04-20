@@ -1,6 +1,6 @@
 <template>
   <AddBookModel ref="addBookModelRef" :refresh="refresh" />
-  <NSpace vertical align="center" justify="center" style="min-height: 70vh">
+  <NSpace vertical justify="center" style="min-height: 70vh">
     <NSpace justify="center">
       <NButton dashed @click="addBookModelRef?.open()">
         <template #icon>
