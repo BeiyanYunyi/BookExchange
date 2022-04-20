@@ -143,9 +143,19 @@ bookRouter.put('/:bookID', async (req, res) => {
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
   if (!book) throw new NotFoundError('[404] Book not found');
   const { body } = req as { body: Partial<Book> };
-  const updatedBook = await BookModel.findByIdAndUpdate(req.params.bookID, body, { new: true })
-    .populate('owner')
-    .populate('orderBy');
+  let updatedBook;
+  if (body.orderBy === null) {
+    const parsedBody = lodash.omit(body, 'orderBy');
+    updatedBook = await BookModel.findByIdAndUpdate(req.params.bookID, parsedBody, { new: true })
+      .populate('owner')
+      .populate('orderBy');
+    updatedBook!.orderBy = undefined;
+    await updatedBook?.save();
+  } else {
+    updatedBook = await BookModel.findByIdAndUpdate(req.params.bookID, body, { new: true })
+      .populate('owner')
+      .populate('orderBy');
+  }
   const bookToReturn = lodash.pick(updatedBook!.toJSON(), [
     'title',
     'desc',
