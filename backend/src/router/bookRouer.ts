@@ -14,6 +14,26 @@ require('express-async-errors');
 
 const bookRouter = express.Router();
 
+bookRouter.get('/', async (req, res) => {
+  const books = (await BookModel.find().populate('owner')).map((book) => {
+    const bookToReturn = lodash.pick(book.toJSON(), [
+      'title',
+      'desc',
+      'author',
+      'tags',
+      'img',
+      'status',
+    ]);
+    return {
+      ...bookToReturn,
+      id: book._id,
+      owner: userParser(book.owner),
+      orderBy: userParser(book.orderBy),
+    };
+  });
+  res.json(books);
+});
+
 bookRouter.use(expressJwt(expressJwtOptions));
 
 bookRouter.post('/', async (req, res) => {
@@ -43,26 +63,6 @@ bookRouter.post('/', async (req, res) => {
     ...bookToReturn,
     owner: userParser(book.owner),
   });
-});
-
-bookRouter.get('/', async (req, res) => {
-  const books = (await BookModel.find().populate('owner').populate('orderBy')).map((book) => {
-    const bookToReturn = lodash.pick(book.toJSON(), [
-      'title',
-      'desc',
-      'author',
-      'tags',
-      'img',
-      'status',
-    ]);
-    return {
-      ...bookToReturn,
-      id: book._id,
-      owner: userParser(book.owner),
-      orderBy: userParser(book.orderBy),
-    };
-  });
-  res.json(books);
 });
 
 /** 预定 / 取消预定 */

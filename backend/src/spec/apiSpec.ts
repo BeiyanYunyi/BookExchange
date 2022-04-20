@@ -92,7 +92,6 @@ const apiSpec: OpenAPIV3.Document = {
       },
       get: {
         summary: 'Get all books',
-        security: [{ auth: ['auth'] }],
         responses: { '200': { description: 'OK' } },
       },
     },
