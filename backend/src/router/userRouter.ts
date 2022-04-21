@@ -67,6 +67,15 @@ userRouter.get('/', async (req, res) => {
   res.json(users);
 });
 
+userRouter.patch('/:userID', async (req, res) => {
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new NotFoundError('User Not Found');
+  if (user.role !== 1)
+    throw new UnauthorizedError('invalid_token', { message: "You can't do this!." });
+  await UserModel.findByIdAndUpdate(req.params.userID, { role: 1 }, { new: true });
+  res.status(200).send();
+});
+
 userRouter.get('/me', async (req, res) => {
   const user = await UserModel.findById(req.user!.id);
   if (!user) throw new NotFoundError('User Not Found');

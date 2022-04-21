@@ -31,6 +31,18 @@ const apiSpec: OpenAPIV3.Document = {
       },
       get: { security: [{ auth: ['auth'] }], responses: { '200': { description: 'OK' } } },
     },
+    '/api/user/{userID}': {
+      parameters: [
+        {
+          description: 'The ID of user',
+          name: 'userID',
+          in: 'path',
+          required: true,
+          schema: { type: 'string', maxLength: 32, minLength: 20 },
+        },
+      ],
+      patch: { security: [{ auth: ['auth'] }], responses: { '200': { description: 'OK' } } },
+    },
     '/api/user/me': {
       get: {
         summary: 'Get Me',

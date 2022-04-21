@@ -1,12 +1,28 @@
-<template><NDataTable :columns="columns" :data="users" /></template>
+<template>
+  <NScrollbar x-scrollable style="max-width: 100vw">
+    <NDataTable :columns="columns" :data="users" scroll-x="900" />
+  </NScrollbar>
+</template>
 <script setup lang="ts">
-import { DataTableColumns, NButton, NDataTable, NP } from 'naive-ui';
+import { DataTableColumns, NDataTable, NP, NScrollbar } from 'naive-ui';
 import { h, onMounted, ref } from 'vue';
 import IUserMe from '../../../types/IUserMe';
+import UserAction from '../components/UserAction.vue';
 import getUsers from '../service/getUsers';
+import useLoadingStore from '../stores/loadingState';
 
 const users = ref<(IUserMe & { key: string })[]>([]);
-const createColumns = (): DataTableColumns<IUserMe> => [
+const loadingState = useLoadingStore();
+const refresh = async () => {
+  loadingState.loading = true;
+  const res = await getUsers();
+  users.value = res.map((user) => ({ ...user, key: user.id }));
+  loadingState.loading = false;
+};
+onMounted(() => {
+  refresh();
+});
+const createColumns = (): DataTableColumns<IUserMe & { key: string }> => [
   { title: 'id', key: 'id' },
   { title: '学号', key: 'stuNum' },
   { title: '姓名', key: 'name' },
@@ -24,20 +40,10 @@ const createColumns = (): DataTableColumns<IUserMe> => [
   { title: '已贡献', key: 'committedBooks' },
   { title: '已预定', key: 'orderedBooks' },
   {
-    title: '提权',
+    title: '操作',
     key: 'promote',
-    render: (row) => {
-      if (row.role === 0) return h(NButton, { type: 'tertiary' }, () => '提权');
-      return undefined;
-    },
+    render: (row) => h(UserAction, { row, refresh }),
   },
 ];
 const columns = createColumns();
-const refresh = async () => {
-  const res = await getUsers();
-  users.value = res.map((user) => ({ ...user, key: user.id }));
-};
-onMounted(() => {
-  refresh();
-});
 </script>
