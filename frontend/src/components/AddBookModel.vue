@@ -83,8 +83,6 @@ const handleSubmit = async () => {
 </script>
 <style module>
 .model {
-  max-width: 100vw;
-  width: fit-content;
 }
 .closeButton {
   margin-left: 1rem;

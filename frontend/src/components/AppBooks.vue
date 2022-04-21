@@ -1,5 +1,6 @@
 <template>
   <AddBookModel ref="addBookModelRef" />
+  <AppBook ref="appBookModelRef" />
   <NSpace vertical justify="center" style="min-height: 70vh">
     <NSpace justify="center">
       <NButton
@@ -17,24 +18,43 @@
         {{ displayAll ? '点击只显示可预定' : '点击显示所有书本' }}
       </NButton>
     </NSpace>
-    <AppBook
-      v-for="book in displayAll ? bookInfo : booksState.orderable"
-      :key="book.id"
-      :info="book"
-    />
-    <NEmpty v-if="(displayAll ? bookInfo : booksState.orderable).length === 0" size="huge">
-      列表为空
-      <template #extra>
-        <NButton type="tertiary" @click="booksState.refresh()">刷新试试</NButton>
-      </template>
-    </NEmpty>
+    <NScrollbar x-scrollable style="max-width: 100vw">
+      <NDataTable
+        :columns="columns"
+        :data="displayAll ? bookInfo : booksState.orderable"
+        :row-key="(row) => row.id"
+        :row-props="rowProps"
+      >
+        <template #empty>
+          <NEmpty size="huge">
+            列表为空
+            <template #extra>
+              <NButton type="tertiary" @click="booksState.refresh()">刷新试试</NButton>
+            </template>
+          </NEmpty>
+        </template>
+      </NDataTable>
+    </NScrollbar>
   </NSpace>
 </template>
 <script setup lang="ts">
 import { AddOutline } from '@vicons/ionicons5';
-import { NButton, NEmpty, NIcon, NSpace, useMessage } from 'naive-ui';
+import {
+  DataTableColumns,
+  NButton,
+  NDataTable,
+  NEmpty,
+  NIcon,
+  NScrollbar,
+  NSpace,
+  NTag,
+  useMessage,
+} from 'naive-ui';
+import { CreateRowKey } from 'naive-ui/lib/data-table/src/interface';
 import { storeToRefs } from 'pinia';
-import { onMounted, ref } from 'vue';
+import { h, onMounted, ref } from 'vue';
+import IFrontendBook from '../../../types/IFrontendBook';
+import IFrontendUser from '../../../types/IFrontendUser';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
 import AddBookModel from './AddBookModel.vue';
@@ -45,7 +65,41 @@ const authState = useAuthStore();
 const booksState = useBooksStore();
 const { books: bookInfo } = storeToRefs(booksState);
 const addBookModelRef = ref<InstanceType<typeof AddBookModel> | null>(null);
+const appBookModelRef = ref<InstanceType<typeof AppBook> | null>(null);
 const displayAll = ref(false);
+const getStatus = (status: 0 | 1 | 2 | 3 | 4, owner: IFrontendUser) => {
+  switch (status) {
+    case 0:
+      return '待确认';
+    case 2:
+      return '已被预定';
+    case 3:
+      return '已借出';
+    case 4:
+      return '已丢失';
+    default:
+      if (owner.id !== authState.user.id) return '可被预定';
+      return '等待预定';
+  }
+};
+const createColumns = (): DataTableColumns<IFrontendBook> => [
+  { title: '标题', key: 'title' },
+  { title: '作者', key: 'author' },
+  {
+    title: '标签',
+    key: 'tags',
+    render: (row) => h(NSpace, () => row.tags.map((tagKey) => h(NTag, () => tagKey))),
+  },
+  { title: '简介', key: 'desc', ellipsis: true },
+  { title: '状态', key: 'status', render: (row) => getStatus(row.status, row.owner) },
+];
+const columns = createColumns();
+const rowProps = (row: any) => ({
+  onClick: () => {
+    appBookModelRef.value?.popInfo(row);
+  },
+  style: 'cursor: pointer',
+});
 
 onMounted(() => booksState.refresh());
 </script>

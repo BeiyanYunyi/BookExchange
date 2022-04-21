@@ -23,7 +23,7 @@ onMounted(() => {
   refresh();
 });
 const createColumns = (): DataTableColumns<IUserMe & { key: string }> => [
-  { title: 'id', key: 'id' },
+  { title: 'id', key: 'id', ellipsis: true },
   { title: '学号', key: 'stuNum' },
   { title: '姓名', key: 'name' },
   { title: '头像', key: 'avatar' },
