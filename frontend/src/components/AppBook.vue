@@ -30,32 +30,41 @@
       </template>
     </NThing>
     <template #action>
-      <NButton
-        v-if="info.status === 1 && info.owner.id !== authState.user.id"
-        type="primary"
-        @click="handlePatch"
+      <NPopconfirm
+        v-if="
+          (info.status === 1 && info.owner.id !== authState.user.id) ||
+          (info.status === 2 && info.orderBy)
+        "
+        positive-text="确认"
+        negative-text="取消"
+        @positive-click="handlePatch"
       >
-        预定
-        <template #icon>
-          <NIcon>
-            <CheckmarkDoneOutline />
-          </NIcon>
+        <template #trigger>
+          <NButton v-if="info.status === 1 && info.owner.id !== authState.user.id" type="primary">
+            预定
+            <template #icon>
+              <NIcon>
+                <CheckmarkDoneOutline />
+              </NIcon>
+            </template>
+          </NButton>
+          <NButton v-if="info.status === 2 && info.orderBy" type="warning">
+            取消预定
+            <template #icon>
+              <NIcon>
+                <ReturnUpBackOutline />
+              </NIcon>
+            </template>
+          </NButton>
         </template>
-      </NButton>
-      <NButton v-if="info.status === 2 && info.orderBy" type="warning" @click="handlePatch">
-        取消预定
-        <template #icon>
-          <NIcon>
-            <ReturnUpBackOutline />
-          </NIcon>
-        </template>
-      </NButton>
+        确定？
+      </NPopconfirm>
     </template>
   </NCard>
 </template>
 <script setup lang="ts">
 import { CheckmarkDoneOutline, ReturnUpBackOutline } from '@vicons/ionicons5';
-import { NButton, NCard, NIcon, NImage, NSpace, NThing, useMessage } from 'naive-ui';
+import { NButton, NCard, NIcon, NImage, NSpace, NThing, NPopconfirm, useMessage } from 'naive-ui';
 import { ref, watch } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
 import getMe from '../service/getMe';
