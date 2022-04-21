@@ -29,6 +29,7 @@ const apiSpec: OpenAPIV3.Document = {
         },
         responses: { '200': { description: 'OK' } },
       },
+      get: { security: [{ auth: ['auth'] }], responses: { '200': { description: 'OK' } } },
     },
     '/api/user/me': {
       get: {

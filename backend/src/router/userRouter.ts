@@ -1,8 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import lodash from 'lodash';
 import jwt from 'jsonwebtoken';
-import expressJwt from 'express-jwt';
+import expressJwt, { UnauthorizedError } from 'express-jwt';
 import config from '../../config/config.json';
 import UserModel, { UserRoleEnum } from '../models/UserModel';
 import expressjwtOptions from '../utils/expressJwtConstructor';
@@ -40,6 +41,31 @@ userRouter.post('/', async (req, res) => {
 });
 
 userRouter.use(expressJwt(expressjwtOptions));
+
+userRouter.get('/', async (req, res) => {
+  const user = await UserModel.findById(req.user!.id);
+  if (!user) throw new NotFoundError('User Not Found');
+  if (user.role !== 1)
+    throw new UnauthorizedError('invalid_token', { message: "You can't do this!." });
+  const users = await Promise.all(
+    (
+      await UserModel.find()
+    ).map(async (aUser) => {
+      const userJSON = aUser.toJSON();
+      const [orderedBooks, committedBooks] = await Promise.all([
+        BookModel.count({ orderBy: aUser._id }),
+        BookModel.count({ owner: aUser._id, status: { $gte: 1 } }),
+      ]);
+      return {
+        ...lodash.omit(userJSON, ['password', 'lastRevokeTime', '_id', '__v']),
+        id: userJSON._id,
+        orderedBooks,
+        committedBooks,
+      };
+    }),
+  );
+  res.json(users);
+});
 
 userRouter.get('/me', async (req, res) => {
   const user = await UserModel.findById(req.user!.id);

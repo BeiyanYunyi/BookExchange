@@ -18,6 +18,9 @@
         {{ user.orderedBooks }} 本 / {{ user.committedBooks }} 本
       </NDescriptionsItem>
     </NDescriptions>
+    <NSpace v-if="user.role === 1" justify="center" style="margin-top: 0.5rem">
+      <NALink to="/admin/user">管理用户</NALink>
+    </NSpace>
     <template #action>
       <NSpace justify="center">
         <NButton circle type="tertiary" @click="router.push('/')">
@@ -68,6 +71,7 @@ import { useRouter } from 'vue-router';
 import UserAvatar from '../components/UserAvatar.vue';
 import axiosClient from '../service/axiosClient';
 import useAuthStore from '../stores/authState';
+import NALink from '../components/NALink.vue';
 
 const router = useRouter();
 const authState = useAuthStore();
