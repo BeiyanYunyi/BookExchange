@@ -8,13 +8,13 @@
         <NInput v-model:value="model.password" type="password" placeholder="请输入密码" />
       </NFormItem>
       <NFormItem path="stuNum" label="姓名">
-        <NInput v-model:value="model.name" placeholder="请输入学号" />
+        <NInput v-model:value="model.name" placeholder="请输入姓名" />
       </NFormItem>
       <NFormItem path="stuNum" label="学院">
-        <NInput v-model:value="model.collage" placeholder="请输入学号" />
+        <NInput v-model:value="model.collage" placeholder="请输入学院" />
       </NFormItem>
       <NFormItem path="stuNum" label="班级">
-        <NInput v-model:value="model.class" placeholder="请输入学号" />
+        <NInput v-model:value="model.class" placeholder="请输入班级" />
       </NFormItem>
       <NSpace justify="center">
         <NButton attr-type="submit" type="primary" @click="handleRegister">注册</NButton>
