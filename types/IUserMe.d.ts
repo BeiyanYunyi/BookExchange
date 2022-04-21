@@ -5,4 +5,6 @@ export default interface IUserMe extends IFrontendUser {
   collage: string;
   class: string;
   role: 0 | 1;
+  orderedBooks: number;
+  committedBooks: number;
 }

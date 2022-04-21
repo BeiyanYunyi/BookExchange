@@ -45,10 +45,14 @@ userRouter.get('/me', async (req, res) => {
   const user = await UserModel.findById(req.user!.id);
   if (!user) throw new NotFoundError('User Not Found');
   const resBody = user.toJSON();
+  const [orderedBooks, committedBooks] = await Promise.all([
+    BookModel.count({ orderBy: user.id }),
+    BookModel.count({ owner: user.id, status: { $gte: 1 } }),
+  ]);
   // eslint-disable-next-line no-underscore-dangle
   const id = resBody._id;
   const info = lodash.pick(resBody, ['name', 'role', 'stuNum', 'collage', 'class', 'avatar']);
-  res.json({ ...info, id });
+  res.json({ ...info, id, orderedBooks, committedBooks });
 });
 
 userRouter.get('/balance', async (req, res) => {

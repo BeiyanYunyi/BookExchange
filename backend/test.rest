@@ -24,11 +24,6 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
 
 ###
-GET http://127.0.0.1:3001/api/user/balance HTTP/1.1
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
-
-###
 GET http://127.0.0.1:3001/api/auth/logout HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNWQwMTA1ZGY0OGM3OWJjMGY5YzAyZCIsImlhdCI6MTY1MDI2NDY0MDg3MH0.a6Oue1TdDWL40nd6by7zYdEUlHXbtG8YnBkYKazt2rQ
 

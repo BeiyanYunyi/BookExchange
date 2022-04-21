@@ -58,6 +58,7 @@ import { CheckmarkDoneOutline, ReturnUpBackOutline } from '@vicons/ionicons5';
 import { NButton, NCard, NIcon, NImage, NSpace, NThing, useMessage } from 'naive-ui';
 import { ref, watch } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
+import getMe from '../service/getMe';
 import orderBook from '../service/orderBook';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
@@ -90,10 +91,12 @@ const handlePatch = async () => {
   if (!authState.authed) return message.error('请先登录');
   const res = await orderBook(props.info);
   if (!res) return message.error('操作失败');
+  const me = await getMe();
+  authState.$patch({ user: me });
   if (res.orderBy) {
-    message.success('预定成功');
+    message.success(`预定成功，还可预定 ${me.committedBooks - me.orderedBooks} 本`);
   } else {
-    message.warning('取消成功');
+    message.warning(`取消成功，还可预定 ${me.committedBooks - me.orderedBooks} 本`);
   }
   return bookState.update(res);
 };

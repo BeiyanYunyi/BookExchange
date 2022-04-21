@@ -1,6 +1,6 @@
 <template>
   <NCard hoverable size="huge">
-    <NSpace>
+    <NSpace justify="center">
       <UserAvatar :size="128" />
     </NSpace>
     <NH3 align-text :class="$style.name">{{ user.name }}</NH3>
@@ -13,6 +13,9 @@
       </NDescriptionsItem>
       <NDescriptionsItem label="班级">
         {{ user.class }}
+      </NDescriptionsItem>
+      <NDescriptionsItem label="已预定 / 已贡献">
+        {{ user.orderedBooks }} 本 / {{ user.committedBooks }} 本
       </NDescriptionsItem>
     </NDescriptions>
     <template #action>

@@ -11,6 +11,8 @@ const useAuthStore = defineStore('auth', {
       id: '',
       name: '',
       avatar: null,
+      orderedBooks: 0,
+      committedBooks: 0,
     };
     const authState = {
       user,
