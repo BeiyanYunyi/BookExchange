@@ -6,6 +6,6 @@ import route from './utils/route';
 const app = express();
 app.use(cors());
 app.use('/api', apiRouter);
-app.use('/', express.static(route.staticRoute));
+app.use(express.static(route.staticRoute));
 
 export default app;
