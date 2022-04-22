@@ -7,6 +7,7 @@
             {{ info.title }}
           </NP>
         </template>
+        <template #header-extra> # {{ info.number }} </template>
         <template #avatar>
           <NImage
             :width="imgWidth"
@@ -41,6 +42,24 @@
       <template #action>
         <NSpace>
           <NButton type="error" @click="hideInfo">关闭</NButton>
+          <NPopconfirm
+            v-if="authState.user.role === 1 && info.status === 0"
+            positive-text="确认"
+            negative-text="取消"
+            @positive-click="handleReceive"
+          >
+            <template #trigger>
+              <NButton type="primary">
+                已接收
+                <template #icon>
+                  <NIcon>
+                    <CheckmarkDoneOutline />
+                  </NIcon>
+                </template>
+              </NButton>
+            </template>
+            确定？
+          </NPopconfirm>
           <NPopconfirm
             v-if="
               (info.status === 1 && info.owner.id !== authState.user.id) ||
@@ -96,8 +115,10 @@ import { ref, watch } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
 import getMe from '../service/getMe';
 import orderBook from '../service/orderBook';
+import receiveBook from '../service/receiveBook';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
+import useLoadingStore from '../stores/loadingState';
 
 const imgWidth = window.innerWidth * 0.08 < 50 ? 50 : window.innerWidth * 0.08;
 const initInfo: IFrontendBook = {
@@ -109,14 +130,17 @@ const initInfo: IFrontendBook = {
   tags: [],
   img: '',
   status: 1,
+  number: 0,
 };
 const info = ref(initInfo);
 const authState = useAuthStore();
 const bookState = useBooksStore();
+const loadState = useLoadingStore();
 const message = useMessage();
 const getStatus = () => {
   switch (info.value.status) {
     case 0:
+      if (info.value.number !== 0) return '已确认';
       return '待确认';
     case 2:
       return '已预定';
@@ -145,6 +169,13 @@ const handlePatch = async () => {
     message.warning(`取消成功，还可预定 ${me.committedBooks - me.orderedBooks} 本`);
   }
   return bookState.update(res);
+};
+const handleReceive = async () => {
+  if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
+  loadState.loading = true;
+  const book = await receiveBook(info.value.id);
+  loadState.loading = false;
+  return bookState.update(book);
 };
 const showModel = ref(false);
 const hideInfo = () => {

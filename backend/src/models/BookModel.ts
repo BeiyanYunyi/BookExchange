@@ -40,6 +40,9 @@ export class Book {
 
   @prop({ enum: BookStatusEnum, required: true })
   status!: number;
+
+  @prop({ default: 0 })
+  number!: number;
 }
 
 const BookModel = getModelForClass(Book);

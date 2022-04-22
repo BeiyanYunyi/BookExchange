@@ -10,4 +10,5 @@ export default interface IFrontendBook {
   tags: string[];
   img: string;
   status: 0 | 1 | 2 | 3 | 4;
+  number: number;
 }

@@ -50,11 +50,9 @@ import {
   NTag,
   useMessage,
 } from 'naive-ui';
-import { CreateRowKey } from 'naive-ui/lib/data-table/src/interface';
 import { storeToRefs } from 'pinia';
 import { h, onMounted, ref } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
-import IFrontendUser from '../../../types/IFrontendUser';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
 import AddBookModel from './AddBookModel.vue';
@@ -67,9 +65,10 @@ const { books: bookInfo } = storeToRefs(booksState);
 const addBookModelRef = ref<InstanceType<typeof AddBookModel> | null>(null);
 const appBookModelRef = ref<InstanceType<typeof AppBook> | null>(null);
 const displayAll = ref(false);
-const getStatus = (status: 0 | 1 | 2 | 3 | 4, owner: IFrontendUser) => {
-  switch (status) {
+const getStatus = (book: IFrontendBook) => {
+  switch (book.status) {
     case 0:
+      if (book.number !== 0) return '已确认';
       return '待确认';
     case 2:
       return '已被预定';
@@ -78,20 +77,26 @@ const getStatus = (status: 0 | 1 | 2 | 3 | 4, owner: IFrontendUser) => {
     case 4:
       return '已丢失';
     default:
-      if (owner.id !== authState.user.id) return '可被预定';
+      if (book.owner.id !== authState.user.id) return '可被预定';
       return '等待预定';
   }
 };
 const createColumns = (): DataTableColumns<IFrontendBook> => [
   { title: '标题', key: 'title' },
-  { title: '作者', key: 'author' },
+  { title: '作者', key: 'author', ellipsis: true },
   {
     title: '标签',
     key: 'tags',
     render: (row) => h(NSpace, () => row.tags.map((tagKey) => h(NTag, () => tagKey))),
+    ellipsis: true,
   },
   { title: '简介', key: 'desc', ellipsis: true },
-  { title: '状态', key: 'status', render: (row) => getStatus(row.status, row.owner) },
+  {
+    title: '状态',
+    key: 'status',
+    render: (row) => getStatus(row),
+    ellipsis: true,
+  },
 ];
 const columns = createColumns();
 const rowProps = (row: any) => ({

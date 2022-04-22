@@ -11,6 +11,7 @@ import UserModel, { User } from '../models/UserModel';
 import expressJwtOptions from '../utils/expressJwtConstructor';
 import userParser from '../utils/userParser';
 import logger from '../utils/logger';
+import NumberModel from '../models/NumberModel';
 
 require('express-async-errors');
 
@@ -37,6 +38,7 @@ bookRouter.get('/', async (req, res) => {
       'tags',
       'img',
       'status',
+      'number',
     ]);
     return {
       ...bookToReturn,
@@ -77,6 +79,7 @@ bookRouter.post('/', async (req, res) => {
     'tags',
     'img',
     'status',
+    'number',
   ]);
   res.json({
     ...bookToReturn,
@@ -124,6 +127,7 @@ bookRouter.patch('/:bookID', async (req, res) => {
     'tags',
     'img',
     'status',
+    'number',
   ]);
   res.json({
     ...bookToReturn,
@@ -163,12 +167,42 @@ bookRouter.put('/:bookID', async (req, res) => {
     'tags',
     'img',
     'status',
+    'number',
   ]);
   res.json({
     ...bookToReturn,
     id: updatedBook!._id,
     owner: userParser(updatedBook!.owner),
     orderBy: userParser(updatedBook!.orderBy),
+  });
+});
+
+bookRouter.get('/:bookID', async (req, res) => {
+  const { id } = req.user!;
+  const [user, book, latest] = await Promise.all([
+    UserModel.findById(id),
+    BookModel.findById(req.params.bookID).populate('owner').populate('orderBy'),
+    NumberModel.findById('1'),
+  ]);
+  if (!user || user.role !== 1)
+    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  if (!book) throw new NotFoundError('[404] Book not found');
+  book.number = latest!.latest + 1;
+  latest!.latest += 1;
+  await Promise.all([book.save(), latest!.save()]);
+  const bookToReturn = lodash.pick(book.toJSON(), [
+    'title',
+    'desc',
+    'author',
+    'tags',
+    'img',
+    'status',
+    'number',
+  ]);
+  res.json({
+    ...bookToReturn,
+    owner: userParser(book.owner),
+    orderBy: userParser(book.orderBy),
   });
 });
 
