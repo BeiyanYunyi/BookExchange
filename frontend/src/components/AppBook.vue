@@ -33,10 +33,7 @@
           </NSpace>
         </template>
         <template #action>
-          <NP :class="$style.max70vw">
-            由 {{ info.owner.name }} 分享，状态：{{ bookStatus
-            }}{{ info.orderBy ? `（预定者：${info.orderBy.name}）` : '' }}
-          </NP>
+          <NP :class="$style.max70vw"> 状态：{{ bookStatus }} </NP>
         </template>
       </NThing>
       <template #action>
@@ -148,7 +145,7 @@ const initInfo: IFrontendBook = {
   desc: '',
   title: '',
   author: '',
-  owner: { id: '', name: '', avatar: null },
+  owner: { id: '', avatar: null },
   tags: [],
   img: '',
   status: 1,
