@@ -64,7 +64,7 @@ const booksState = useBooksStore();
 const { books: bookInfo } = storeToRefs(booksState);
 const addBookModelRef = ref<InstanceType<typeof AddBookModel> | null>(null);
 const appBookModelRef = ref<InstanceType<typeof AppBook> | null>(null);
-const displayAll = ref(false);
+const displayAll = ref(true);
 const getStatus = (book: IFrontendBook) => {
   switch (book.status) {
     case 0:
