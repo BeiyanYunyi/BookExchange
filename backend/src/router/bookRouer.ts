@@ -206,4 +206,19 @@ bookRouter.get('/:bookID', async (req, res) => {
   });
 });
 
+bookRouter.delete('/:bookID', async (req, res) => {
+  const { id } = req.user!;
+  const [user, book] = await Promise.all([
+    UserModel.findById(id),
+    BookModel.findById(req.params.bookID).populate('owner').populate('orderBy'),
+  ]);
+  if (!book) throw new NotFoundError('[404] Book not found');
+  if (!user || (user.role !== 1 && (book.owner as User)._id !== id))
+    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  if (book.number !== 0 && user.role !== 1)
+    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  await book.deleteOne();
+  res.status(204).send();
+});
+
 export default bookRouter;

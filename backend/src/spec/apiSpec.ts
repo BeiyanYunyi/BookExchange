@@ -131,6 +131,10 @@ const apiSpec: OpenAPIV3.Document = {
         security: [{ auth: ['auth'] }],
         responses: { '200': { description: 'OK' } },
       },
+      delete: {
+        security: [{ auth: ['auth'] }],
+        responses: { '204': { description: 'OK' } },
+      },
     },
   },
   components: {
