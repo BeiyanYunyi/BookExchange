@@ -157,6 +157,14 @@ const bookStatus = ref(getStatus());
 watch(info, () => {
   bookStatus.value = getStatus();
 });
+const showModel = ref(false);
+const hideInfo = () => {
+  showModel.value = false;
+};
+const popInfo = (newInfo: IFrontendBook) => {
+  info.value = newInfo;
+  showModel.value = true;
+};
 const handlePatch = async () => {
   if (!authState.authed) return message.error('请先登录');
   const res = await orderBook(info.value);
@@ -168,22 +176,16 @@ const handlePatch = async () => {
   } else {
     message.warning(`取消成功，还可预定 ${me.committedBooks - me.orderedBooks} 本`);
   }
-  return bookState.update(res);
+  bookState.update(res);
+  return hideInfo();
 };
 const handleReceive = async () => {
   if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
   loadState.loading = true;
   const book = await receiveBook(info.value.id);
   loadState.loading = false;
-  return bookState.update(book);
-};
-const showModel = ref(false);
-const hideInfo = () => {
-  showModel.value = false;
-};
-const popInfo = (newInfo: IFrontendBook) => {
-  info.value = newInfo;
-  showModel.value = true;
+  bookState.update(book);
+  return hideInfo();
 };
 defineExpose({ popInfo, hideInfo });
 </script>

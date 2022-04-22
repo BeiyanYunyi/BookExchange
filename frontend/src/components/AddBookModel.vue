@@ -52,8 +52,10 @@ import { CloseOutline } from '@vicons/ionicons5';
 import { ref } from 'vue';
 import addBook, { IAddBookParam } from '../service/addBook';
 import useBooksStore from '../stores/booksState';
+import useLoadingStore from '../stores/loadingState';
 
 const message = useMessage();
+const loadingState = useLoadingStore();
 const showModel = ref(false);
 const formModel = ref<IAddBookParam>({ title: '', desc: '', author: '', tags: [], img: '' });
 const tags = ref<string[]>([]);
@@ -70,6 +72,7 @@ const bookState = useBooksStore();
 defineExpose<{ open: () => void }>({ open });
 
 const handleSubmit = async () => {
+  loadingState.loading = true;
   try {
     await addBook({ ...formModel.value, tags: tags.value });
     await bookState.refresh();
@@ -79,6 +82,7 @@ const handleSubmit = async () => {
     message.error('添加书本失败');
     console.error(e);
   }
+  loadingState.loading = false;
 };
 </script>
 <style module>
