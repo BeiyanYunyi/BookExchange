@@ -41,16 +41,24 @@
           <NButton type="error" @click="hideInfo">关闭</NButton>
           <NPopconfirm
             v-if="authState.user.role === 1 && info.status === 0"
-            positive-text="确认"
+            :positive-text="info.number === 0 ? '确认已接收？' : '确认撤回接收？'"
             negative-text="取消"
-            @positive-click="handleReceive"
+            @positive-click="info.number === 0 ? handleReceive : handleUnReceive"
           >
             <template #trigger>
-              <NButton type="primary">
+              <NButton v-if="info.number === 0" type="primary">
                 已接收
                 <template #icon>
                   <NIcon>
                     <CheckmarkDoneOutline />
+                  </NIcon>
+                </template>
+              </NButton>
+              <NButton v-else type="primary">
+                取消接收
+                <template #icon>
+                  <NIcon>
+                    <ArrowUndoSharp />
                   </NIcon>
                 </template>
               </NButton>
@@ -116,7 +124,12 @@
   </NModal>
 </template>
 <script setup lang="ts">
-import { CheckmarkDoneOutline, ReturnUpBackOutline, TrashOutline } from '@vicons/ionicons5';
+import {
+  CheckmarkDoneOutline,
+  ReturnUpBackOutline,
+  TrashOutline,
+  ArrowUndoSharp,
+} from '@vicons/ionicons5';
 import {
   NButton,
   NCard,
@@ -134,6 +147,7 @@ import IFrontendBook from '../../../types/IFrontendBook';
 import deleteBook from '../service/deleteBook';
 import getMe from '../service/getMe';
 import orderBook from '../service/orderBook';
+import putBook from '../service/putBook';
 import receiveBook from '../service/receiveBook';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
@@ -202,9 +216,19 @@ const handleReceive = async () => {
   if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
   loadState.loading = true;
   const book = await receiveBook(info.value.id);
+  info.value = book;
   loadState.loading = false;
-  bookState.update(book);
-  return hideInfo();
+  message.success(`已确认收到，编号：${book.number}`);
+  return bookState.update(book);
+};
+const handleUnReceive = async () => {
+  if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
+  loadState.loading = true;
+  const book = await putBook(info.value.id, { number: 0 });
+  info.value = book;
+  loadState.loading = false;
+  message.success('已取消');
+  return bookState.update(book);
 };
 const handleDelete = async () => {
   loadState.loading = true;

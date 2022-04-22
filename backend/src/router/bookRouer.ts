@@ -83,6 +83,7 @@ bookRouter.post('/', async (req, res) => {
   ]);
   res.json({
     ...bookToReturn,
+    id: book._id,
     owner: userParser(book.owner),
   });
 });
@@ -201,6 +202,7 @@ bookRouter.get('/:bookID', async (req, res) => {
   ]);
   res.json({
     ...bookToReturn,
+    id: book._id,
     owner: userParser(book.owner),
     orderBy: userParser(book.orderBy),
   });

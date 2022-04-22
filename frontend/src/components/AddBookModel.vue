@@ -72,17 +72,22 @@ const bookState = useBooksStore();
 defineExpose<{ open: () => void }>({ open });
 
 const handleSubmit = async () => {
-  loadingState.loading = true;
-  try {
-    await addBook({ ...formModel.value, tags: tags.value });
-    await bookState.refresh();
-    message.success('感谢您的贡献');
-    showModel.value = false;
-  } catch (e) {
-    message.error('添加书本失败');
-    console.error(e);
+  const { title, desc, author } = formModel.value;
+  if (title && desc && author) {
+    loadingState.loading = true;
+    try {
+      await addBook({ ...formModel.value, tags: tags.value });
+      await bookState.refresh();
+      showModel.value = false;
+      message.success('感谢您的贡献');
+    } catch (e) {
+      message.error('添加书本失败');
+      console.error(e);
+    }
+    loadingState.loading = false;
+  } else {
+    message.error('请完善必填信息');
   }
-  loadingState.loading = false;
 };
 </script>
 <style module>

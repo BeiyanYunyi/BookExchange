@@ -88,7 +88,6 @@ const createColumns = (): DataTableColumns<IFrontendBook> => [
     render: (row) => h(NSpace, () => row.tags.map((tagKey) => h(NTag, () => tagKey))),
     ellipsis: true,
   },
-  { title: '简介', key: 'desc', ellipsis: true },
   {
     title: '状态',
     key: 'status',
