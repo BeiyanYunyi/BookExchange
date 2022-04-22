@@ -213,7 +213,7 @@ bookRouter.delete('/:bookID', async (req, res) => {
     BookModel.findById(req.params.bookID).populate('owner').populate('orderBy'),
   ]);
   if (!book) throw new NotFoundError('[404] Book not found');
-  if (!user || (user.role !== 1 && (book.owner as User)._id !== id))
+  if (!user || (user.role !== 1 && (book.owner as User)._id.toString() !== id))
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
   if (book.number !== 0 && user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });

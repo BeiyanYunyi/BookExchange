@@ -24,6 +24,9 @@ const useBooksStore = defineStore('books', {
       const index = this.books.findIndex((oriBook) => oriBook.id === book.id);
       this.books[index] = book;
     },
+    delete(bookID: string) {
+      this.books = this.books.filter((book) => book.id !== bookID);
+    },
   },
   getters: {
     orderable(state) {

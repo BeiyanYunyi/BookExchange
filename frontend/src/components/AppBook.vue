@@ -62,6 +62,27 @@
           </NPopconfirm>
           <NPopconfirm
             v-if="
+              (info.owner.id === authState.user.id && info.status === 0) ||
+              authState.user.role === 1
+            "
+            positive-text="确认"
+            negative-text="取消"
+            @positive-click="handleDelete"
+          >
+            <template #trigger>
+              <NButton type="error">
+                删除
+                <template #icon>
+                  <NIcon>
+                    <TrashOutline />
+                  </NIcon>
+                </template>
+              </NButton>
+            </template>
+            确定？
+          </NPopconfirm>
+          <NPopconfirm
+            v-if="
               (info.status === 1 && info.owner.id !== authState.user.id) ||
               (info.status === 2 && info.orderBy)
             "
@@ -98,7 +119,7 @@
   </NModal>
 </template>
 <script setup lang="ts">
-import { CheckmarkDoneOutline, ReturnUpBackOutline } from '@vicons/ionicons5';
+import { CheckmarkDoneOutline, ReturnUpBackOutline, TrashOutline } from '@vicons/ionicons5';
 import {
   NButton,
   NCard,
@@ -113,6 +134,7 @@ import {
 } from 'naive-ui';
 import { ref, watch } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
+import deleteBook from '../service/deleteBook';
 import getMe from '../service/getMe';
 import orderBook from '../service/orderBook';
 import receiveBook from '../service/receiveBook';
@@ -186,6 +208,32 @@ const handleReceive = async () => {
   loadState.loading = false;
   bookState.update(book);
   return hideInfo();
+};
+const handleDelete = async () => {
+  loadState.loading = true;
+  try {
+    const res = await deleteBook(info.value.id);
+    switch (res.status) {
+      case 204:
+        message.success('删除成功');
+        break;
+      case 404:
+        message.warning('书本已不存在，可能是重复删除');
+        break;
+      case 401:
+        message.error('无权限');
+        break;
+      default:
+        message.error('未知错误');
+        break;
+    }
+    bookState.delete(info.value.id);
+  } catch (e) {
+    message.error('删除失败');
+    console.error(e);
+  }
+  hideInfo();
+  loadState.loading = false;
 };
 defineExpose({ popInfo, hideInfo });
 </script>
