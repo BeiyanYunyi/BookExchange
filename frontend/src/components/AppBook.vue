@@ -41,9 +41,9 @@
           <NButton type="error" @click="hideInfo">关闭</NButton>
           <NPopconfirm
             v-if="authState.user.role === 1 && info.status === 0"
-            :positive-text="info.number === 0 ? '确认已接收？' : '确认撤回接收？'"
+            :positive-text="info.number === 0 ? '确认已接收' : '确认撤回接收'"
             negative-text="取消"
-            @positive-click="info.number === 0 ? handleReceive : handleUnReceive"
+            @positive-click="handleConfirm"
           >
             <template #trigger>
               <NButton v-if="info.number === 0" type="primary">
@@ -212,24 +212,32 @@ const handlePatch = async () => {
   bookState.update(res);
   return hideInfo();
 };
-const handleReceive = async () => {
-  if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
-  loadState.loading = true;
-  const book = await receiveBook(info.value.id);
-  info.value = book;
-  loadState.loading = false;
-  message.success(`已确认收到，编号：${book.number}`);
-  return bookState.update(book);
+const handleConfirm = async () => {
+  const handleReceive = async () => {
+    if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
+    loadState.loading = true;
+    const book = await receiveBook(info.value.id);
+    info.value = book;
+    loadState.loading = false;
+    message.success(`已确认收到，编号：${book.number}`);
+    return bookState.update(book);
+  };
+  const handleUnReceive = async () => {
+    if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
+    loadState.loading = true;
+    const book = await putBook(info.value.id, { number: 0 });
+    info.value = book;
+    loadState.loading = false;
+    message.success('已取消');
+    return bookState.update(book);
+  };
+  if (info.value.number === 0) {
+    await handleReceive();
+  } else {
+    await handleUnReceive();
+  }
 };
-const handleUnReceive = async () => {
-  if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
-  loadState.loading = true;
-  const book = await putBook(info.value.id, { number: 0 });
-  info.value = book;
-  loadState.loading = false;
-  message.success('已取消');
-  return bookState.update(book);
-};
+
 const handleDelete = async () => {
   loadState.loading = true;
   try {
