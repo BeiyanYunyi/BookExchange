@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import IFrontendBook from '../../../types/IFrontendBook';
 import getBooks from '../service/getBooks';
+import shuffle from '../utils/shuffle';
 import useAuthStore from './authState';
 import useLoadingStore from './loadingState';
 
@@ -31,7 +32,12 @@ const useBooksStore = defineStore('books', {
   getters: {
     orderable(state) {
       const authState = useAuthStore();
-      return state.books.filter((book) => book.status === 1 && book.owner.id !== authState.user.id);
+      return shuffle(
+        state.books.filter((book) => book.status === 1 && book.owner.id !== authState.user.id),
+      );
+    },
+    shuffled(state) {
+      return shuffle(state.books);
     },
   },
 });

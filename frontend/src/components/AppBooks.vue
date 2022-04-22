@@ -21,7 +21,7 @@
     <NScrollbar x-scrollable style="max-width: 100vw">
       <NDataTable
         :columns="columns"
-        :data="displayAll ? bookInfo : booksState.orderable"
+        :data="displayAll ? booksState.shuffled : booksState.orderable"
         :row-key="(row) => row.id"
         :row-props="rowProps"
       >
@@ -50,7 +50,6 @@ import {
   NTag,
   useMessage,
 } from 'naive-ui';
-import { storeToRefs } from 'pinia';
 import { h, onMounted, ref } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
 import useAuthStore from '../stores/authState';
@@ -61,7 +60,6 @@ import AppBook from './AppBook.vue';
 const message = useMessage();
 const authState = useAuthStore();
 const booksState = useBooksStore();
-const { books: bookInfo } = storeToRefs(booksState);
 const addBookModelRef = ref<InstanceType<typeof AddBookModel> | null>(null);
 const appBookModelRef = ref<InstanceType<typeof AppBook> | null>(null);
 const displayAll = ref(true);
