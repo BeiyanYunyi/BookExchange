@@ -14,14 +14,11 @@
         </template>
         贡献书本
       </NButton>
-      <NButton :type="displayAll ? 'primary' : 'tertiary'" @click="displayAll = !displayAll">
-        {{ displayAll ? '点击只显示可预定' : '点击显示所有书本' }}
-      </NButton>
     </NSpace>
     <NScrollbar x-scrollable style="max-width: 100vw">
       <NDataTable
         :columns="columns"
-        :data="displayAll ? booksState.shuffled : booksState.orderable"
+        :data="booksState.shuffled"
         :row-key="(row) => row.id"
         :row-props="rowProps"
       >
@@ -63,10 +60,12 @@ const authState = useAuthStore();
 const booksState = useBooksStore();
 const addBookModelRef = ref<InstanceType<typeof AddBookModel> | null>(null);
 const appBookModelRef = ref<InstanceType<typeof AppBook> | null>(null);
-const displayAll = ref(true);
 
 const createColumns = (): DataTableColumns<IFrontendBook> => [
-  { title: '标题', key: 'title' },
+  {
+    title: '标题',
+    key: 'title',
+  },
   { title: '作者', key: 'author', ellipsis: true },
   {
     title: '标签',
@@ -79,6 +78,29 @@ const createColumns = (): DataTableColumns<IFrontendBook> => [
     key: 'status',
     render: (row) => getStatus(row),
     ellipsis: true,
+    defaultFilterOptionValue: 'all',
+    filterMultiple: false,
+    filterOptions: [
+      { label: '全部', value: 'all' },
+      { label: '我的预定', value: 'ordered' },
+      { label: '我的贡献', value: 'donated' },
+      { label: '可预定', value: 'orderable' },
+    ],
+    filter: (value, row) => {
+      switch (value) {
+        case 'all':
+          return true;
+        case 'ordered':
+          if (!row.orderBy) return false;
+          return row.orderBy.id === authState.user.id;
+        case 'donated':
+          return row.owner.id === authState.user.id;
+        case 'orderable':
+          return row.status === 1 && row.owner.id !== authState.user.id;
+        default:
+          return false;
+      }
+    },
   },
 ];
 const columns = createColumns();
