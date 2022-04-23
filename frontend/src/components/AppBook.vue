@@ -66,6 +66,32 @@
             确定？
           </NPopconfirm>
           <NPopconfirm
+            v-if="authState.user.role === 1 && (info.status === 2 || info.status === 3)"
+            :positive-text="info.status === 2 ? '确认已领取' : '确认撤回领取'"
+            negative-text="取消"
+            @positive-click="handleGive"
+          >
+            <template #trigger>
+              <NButton v-if="info.status === 2" type="primary">
+                已领取
+                <template #icon>
+                  <NIcon>
+                    <CheckmarkDoneOutline />
+                  </NIcon>
+                </template>
+              </NButton>
+              <NButton v-else type="primary">
+                取消已领取
+                <template #icon>
+                  <NIcon>
+                    <ArrowUndoSharp />
+                  </NIcon>
+                </template>
+              </NButton>
+            </template>
+            确定？
+          </NPopconfirm>
+          <NPopconfirm
             v-if="
               (info.owner.id === authState.user.id && info.status === 0) ||
               authState.user.role === 1
@@ -143,6 +169,7 @@ import {
   NP,
 } from 'naive-ui';
 import { ref, watch } from 'vue';
+import getStatus from '../utils/getStatus';
 import IFrontendBook from '../../../types/IFrontendBook';
 import deleteBook from '../service/deleteBook';
 import getMe from '../service/getMe';
@@ -170,25 +197,9 @@ const authState = useAuthStore();
 const bookState = useBooksStore();
 const loadState = useLoadingStore();
 const message = useMessage();
-const getStatus = () => {
-  switch (info.value.status) {
-    case 0:
-      if (info.value.number !== 0) return '已确认';
-      return '待确认';
-    case 2:
-      return '已预定';
-    case 3:
-      return '已借出';
-    case 4:
-      return '已丢失';
-    default:
-      if (info.value.owner.id !== authState.user.id) return '可预定';
-      return '等待预定';
-  }
-};
-const bookStatus = ref(getStatus());
+const bookStatus = ref(getStatus(info.value));
 watch(info, () => {
-  bookStatus.value = getStatus();
+  bookStatus.value = getStatus(info.value);
 });
 const showModel = ref(false);
 const hideInfo = () => {
@@ -236,6 +247,32 @@ const handleConfirm = async () => {
   } else {
     await handleUnReceive();
   }
+};
+
+const handleGive = async () => {
+  if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
+  const handleGiveOut = async () => {
+    loadState.loading = true;
+    const book = await putBook(info.value.id, { status: 3 });
+    info.value = book;
+    loadState.loading = false;
+    message.success('已确认给出');
+    return bookState.update(book);
+  };
+  const handleUnGiveOut = async () => {
+    loadState.loading = true;
+    const book = await putBook(info.value.id, { status: 2 });
+    info.value = book;
+    loadState.loading = false;
+    message.success('已取消');
+    return bookState.update(book);
+  };
+  if (info.value.status === 2) {
+    await handleGiveOut();
+  } else {
+    await handleUnGiveOut();
+  }
+  return null;
 };
 
 const handleDelete = async () => {

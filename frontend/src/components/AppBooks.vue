@@ -54,6 +54,7 @@ import { h, onMounted, ref } from 'vue';
 import IFrontendBook from '../../../types/IFrontendBook';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
+import getStatus from '../utils/getStatus';
 import AddBookModel from './AddBookModel.vue';
 import AppBook from './AppBook.vue';
 
@@ -63,22 +64,7 @@ const booksState = useBooksStore();
 const addBookModelRef = ref<InstanceType<typeof AddBookModel> | null>(null);
 const appBookModelRef = ref<InstanceType<typeof AppBook> | null>(null);
 const displayAll = ref(true);
-const getStatus = (book: IFrontendBook) => {
-  switch (book.status) {
-    case 0:
-      if (book.number !== 0) return '已确认';
-      return '待确认';
-    case 2:
-      return '已被预定';
-    case 3:
-      return '已借出';
-    case 4:
-      return '已丢失';
-    default:
-      if (book.owner.id !== authState.user.id) return '可被预定';
-      return '等待预定';
-  }
-};
+
 const createColumns = (): DataTableColumns<IFrontendBook> => [
   { title: '标题', key: 'title' },
   { title: '作者', key: 'author', ellipsis: true },
