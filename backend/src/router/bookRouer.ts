@@ -208,6 +208,34 @@ bookRouter.get('/:bookID', async (req, res) => {
   });
 });
 
+bookRouter.get('/:bookID/receive', async (req, res) => {
+  const { id } = req.user!;
+  const [user, book] = await Promise.all([
+    UserModel.findById(id),
+    BookModel.findById(req.params.bookID).populate('owner').populate('orderBy'),
+  ]);
+  if (!book) throw new NotFoundError('[404] Book not found');
+  if (!user || ((book.orderBy as User)._id.toString() !== id && user.role !== 1))
+    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  book.status = 3;
+  await book.save();
+  const bookToReturn = lodash.pick(book.toJSON(), [
+    'title',
+    'desc',
+    'author',
+    'tags',
+    'img',
+    'status',
+    'number',
+  ]);
+  res.json({
+    ...bookToReturn,
+    id: book._id,
+    owner: userParser(book.owner),
+    orderBy: userParser(book.orderBy),
+  });
+});
+
 bookRouter.delete('/:bookID', async (req, res) => {
   const { id } = req.user!;
   const [user, book] = await Promise.all([

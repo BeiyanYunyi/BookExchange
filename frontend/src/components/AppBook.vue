@@ -66,7 +66,10 @@
             确定？
           </NPopconfirm>
           <NPopconfirm
-            v-if="authState.user.role === 1 && (info.status === 2 || info.status === 3)"
+            v-if="
+              (authState.user.role === 1 && [2, 3].includes(info.status)) ||
+              (info.status === 2 && info.orderBy.id === authState.user.id)
+            "
             :positive-text="info.status === 2 ? '确认已领取' : '确认撤回领取'"
             negative-text="取消"
             @positive-click="handleGive"
@@ -179,6 +182,7 @@ import receiveBook from '../service/receiveBook';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
 import useLoadingStore from '../stores/loadingState';
+import giveOutBook from '../service/giveOutBook';
 
 const imgWidth = window.innerWidth * 0.08 < 50 ? 50 : window.innerWidth * 0.08;
 const initInfo: IFrontendBook = {
@@ -250,16 +254,24 @@ const handleConfirm = async () => {
 };
 
 const handleGive = async () => {
-  if (!authState.authed || authState.user.role !== 1) return message.error('无权限');
+  if (!authState.authed) return message.error('无权限');
   const handleGiveOut = async () => {
+    if (authState.user.role !== 1 && info.value.orderBy?.id !== authState.user.id)
+      return message.error('无权限');
     loadState.loading = true;
-    const book = await putBook(info.value.id, { status: 3 });
+    let book;
+    if (authState.user.role === 1) {
+      book = await putBook(info.value.id, { status: 3 });
+    } else {
+      book = await giveOutBook(info.value.id);
+    }
     info.value = book;
     loadState.loading = false;
     message.success('已确认给出');
     return bookState.update(book);
   };
   const handleUnGiveOut = async () => {
+    if (authState.user.role !== 1) return message.error('无权限');
     loadState.loading = true;
     const book = await putBook(info.value.id, { status: 2 });
     info.value = book;

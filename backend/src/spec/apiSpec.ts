@@ -136,6 +136,21 @@ const apiSpec: OpenAPIV3.Document = {
         responses: { '204': { description: 'OK' } },
       },
     },
+    '/api/book/{bookID}/receive': {
+      parameters: [
+        {
+          description: 'The ID of book',
+          name: 'bookID',
+          in: 'path',
+          required: true,
+          schema: { type: 'string', maxLength: 32, minLength: 20 },
+        },
+      ],
+      get: {
+        security: [{ auth: ['auth'] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
   },
   components: {
     schemas: {
