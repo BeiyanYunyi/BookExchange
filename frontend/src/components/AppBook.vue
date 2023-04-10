@@ -68,7 +68,7 @@
           <NPopconfirm
             v-if="
               (authState.user.role === 1 && [2, 3].includes(info.status)) ||
-              (info.status === 2 && info.orderBy.id === authState.user.id)
+              (info.status === 2 && info.orderBy?.id === authState.user.id)
             "
             :positive-text="info.status === 2 ? '确认已领取' : '确认撤回领取'"
             negative-text="取消"
