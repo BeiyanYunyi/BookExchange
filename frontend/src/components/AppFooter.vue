@@ -11,8 +11,8 @@
       <NDescriptionsItem label="技术支持">DH 互联网工作室<br />科学技术协会</NDescriptionsItem>
     </NDescriptions>
     <NP :class="$style.copyleft">
-      ©2022 黎想 以 AGPLv3 协议
-      <NA href="https://github.com/lixiang810/BookExchange">开源</NA>
+      ©2023 北雁云依 以 AGPLv3 协议
+      <NA href="https://github.com/BeiyanYunyi/BookExchange">开源</NA>
     </NP>
   </NLayout>
 </template>
