@@ -1,7 +1,7 @@
 import { UnauthorizedError } from 'express-jwt';
+import { jwtSecret } from '../config';
 import UserModel from '../models/UserModel';
 import logger from './logger';
-import config from '../../config/config.json';
 
 const tokenChecker = async (
   _req: any,
@@ -21,9 +21,8 @@ const tokenChecker = async (
   return done(null, false);
 };
 
-const SECRET = config.jwtSecret;
 const expressjwtOptions = {
-  secret: SECRET,
+  secret: jwtSecret,
   algorithms: ['HS256'],
   isRevoked: tokenChecker,
 };

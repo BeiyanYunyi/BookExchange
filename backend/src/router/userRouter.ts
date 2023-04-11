@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import lodash from 'lodash';
 import jwt from 'jsonwebtoken';
 import expressJwt, { UnauthorizedError } from 'express-jwt';
-import config from '../../config/config.json';
+import { jwtSecret, saltRounds } from '../config';
 import UserModel, { UserRoleEnum } from '../models/UserModel';
 import expressjwtOptions from '../utils/expressJwtConstructor';
 import ConflictError from '../errors/ConflictError';
@@ -21,7 +21,7 @@ userRouter.post('/', async (req, res) => {
   };
   const exist = await UserModel.findOne({ stuNum: body.stuNum });
   if (exist) throw new ConflictError('student number conflicted');
-  const password = await bcrypt.hash(body.password, config.saltRounds);
+  const password = await bcrypt.hash(body.password, saltRounds);
   const user = new UserModel({
     name: body.name,
     password,
@@ -35,7 +35,7 @@ userRouter.post('/', async (req, res) => {
   const resBody = user.toJSON();
   // eslint-disable-next-line no-underscore-dangle
   const id = resBody._id;
-  const token = jwt.sign({ id, iat: Date.now() }, config.jwtSecret);
+  const token = jwt.sign({ id, iat: Date.now() }, jwtSecret);
   const info = lodash.pick(resBody, ['name', 'role', 'stuNum', 'collage', 'class', 'avatar']);
   res.json({ info: { ...info, id }, token });
 });

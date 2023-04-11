@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import NotFoundError from '../errors/NotFoundError';
 import UserModel from '../models/UserModel';
 import expressjwtOptions from '../utils/expressJwtConstructor';
-import config from '../../config/config.json';
+import { jwtSecret } from '../config';
 
 const authRouter = express.Router();
 
@@ -17,7 +17,7 @@ authRouter.post('/login', async (req, res) => {
   const resBody = stu.toJSON();
   // eslint-disable-next-line no-underscore-dangle
   const id = resBody._id;
-  const token = jwt.sign({ id, iat: Date.now() }, config.jwtSecret);
+  const token = jwt.sign({ id, iat: Date.now() }, jwtSecret);
   res.json({ token });
 });
 
