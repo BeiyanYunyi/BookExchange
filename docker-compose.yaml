@@ -17,8 +17,8 @@ services:
     ports:
       - 3000:3001
     volumes:
-      - ./data:/usr/src/app/data
       - ./.env:/usr/src/app/backend/.env
+      - ./log:/usr/src/app/backend/log
     environment:
       - JWT_SECRETS=114514
       - MONGO_ADDRESS=mongo
