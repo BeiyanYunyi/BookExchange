@@ -2,8 +2,6 @@
   <NLayout embedded :class="$style.footer">
     <NDescriptions :column="3" :class="$style.description">
       <NDescriptionsItem label="合办社团">
-        TOP 学习读书社
-        <br />
         益行社
         <br />
         DH 互联网工作室
