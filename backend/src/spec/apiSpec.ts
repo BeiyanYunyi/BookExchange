@@ -151,6 +151,13 @@ const apiSpec: OpenAPIV3.Document = {
         responses: { '200': { description: 'OK' } },
       },
     },
+    '/api/book/startOrdering': {
+      post: {
+        summary: 'Start Ordering',
+        security: [{ auth: ['auth'] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
   },
   components: {
     schemas: {

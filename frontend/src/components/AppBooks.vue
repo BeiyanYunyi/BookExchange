@@ -14,6 +14,7 @@
         </template>
         贡献书本
       </NButton>
+      <StartOrderingButton />
     </NSpace>
     <NScrollbar x-scrollable style="max-width: 100vw">
       <NDataTable
@@ -54,6 +55,7 @@ import useBooksStore from '../stores/booksState';
 import getStatus from '../utils/getStatus';
 import AddBookModel from './AddBookModel.vue';
 import AppBook from './AppBook.vue';
+import StartOrderingButton from './StartOrderingButton.vue';
 
 const message = useMessage();
 const authState = useAuthStore();

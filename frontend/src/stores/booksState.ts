@@ -27,6 +27,14 @@ const useBooksStore = defineStore('books', {
     delete(bookID: string) {
       this.books = this.books.filter((book) => book.id !== bookID);
     },
+    startOrdering(booksID: string[]) {
+      this.books = this.books.map((book) => {
+        if (booksID.includes(book.id)) {
+          return { ...book, status: 1 };
+        }
+        return book;
+      });
+    },
   },
   getters: {
     shuffled(state) {

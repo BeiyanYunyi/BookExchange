@@ -30,7 +30,7 @@ export class Book {
   @prop({
     ref: () => User,
   })
-  orderBy!: Ref<User>;
+  orderBy?: Ref<User>;
 
   @prop({ required: true, type: String, default: [] })
   tags!: mongoose.Types.Array<string>;
