@@ -19,13 +19,15 @@ userRouter.post('/', async (req, res) => {
   const { body } = req as {
     body: { name: string; password: string; stuNum: string; collage: string; class: string };
   };
+  const count = await UserModel.count();
   const exist = await UserModel.findOne({ stuNum: body.stuNum });
   if (exist) throw new ConflictError('student number conflicted');
   const password = await bcrypt.hash(body.password, saltRounds);
   const user = new UserModel({
     name: body.name,
     password,
-    role: UserRoleEnum.default,
+    // 第一个注册的用户是管理员
+    role: count ? UserRoleEnum.default : UserRoleEnum.admin,
     stuNum: body.stuNum,
     collage: body.collage,
     class: body.class,
