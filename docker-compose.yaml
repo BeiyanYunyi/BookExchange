@@ -9,7 +9,7 @@ services:
   bookexchange:
     depends_on:
       - mongo
-    image: ghcr.io/beiyanyunyi/bookexchange
+    image: ghcr.io/beiyanyunyi/bookexchange:main
     container_name: bookexchange
     build:
       context: .
