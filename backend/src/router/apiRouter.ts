@@ -4,7 +4,7 @@ import errorHandler from '../middlewares/errorHandler';
 import requestLogger from '../middlewares/requestLogger';
 import apiSpec from '../spec/apiSpec';
 import authRouter from './authRouter';
-import bookRouter from './bookRouer';
+import bookRouter from './bookRouter';
 import userRouter from './userRouter';
 
 require('express-async-errors');

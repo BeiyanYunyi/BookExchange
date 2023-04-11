@@ -1,6 +1,6 @@
 import axiosClient from './axiosClient';
 
-interface IStartOrderingResult {
+interface IOrderingResult {
   result: {
     acknowledged: true;
     modifiedCount: number;
@@ -12,7 +12,12 @@ interface IStartOrderingResult {
 }
 
 const startOrdering = async () => {
-  const res = await axiosClient.client.post<IStartOrderingResult>('/api/book/startOrdering');
+  const res = await axiosClient.client.post<IOrderingResult>('/api/book/ordering');
+  return res.data;
+};
+
+export const stopOrdering = async () => {
+  const res = await axiosClient.client.delete<IOrderingResult>('/api/book/ordering');
   return res.data;
 };
 

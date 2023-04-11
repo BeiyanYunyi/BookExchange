@@ -57,7 +57,7 @@ bookRouter.get('/', async (req, res) => {
 
 bookRouter.use(expressJwt(expressJwtOptions));
 
-bookRouter.post('/startOrdering', async (req, res) => {
+bookRouter.post('/ordering', async (req, res) => {
   const { id } = req.user!;
   const user = await UserModel.findById(id);
   if (!user || user.role !== 1)
@@ -67,6 +67,20 @@ bookRouter.post('/startOrdering', async (req, res) => {
   const result = await BookModel.updateMany(
     { status: 0, number: { $gt: 0 } },
     { status: 1 },
+  ).exec();
+  res.json({ result, books: booksId });
+});
+
+bookRouter.delete('/ordering', async (req, res) => {
+  const { id } = req.user!;
+  const user = await UserModel.findById(id);
+  if (!user || user.role !== 1)
+    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  const books = await BookModel.find({ status: 1, number: { $gt: 0 } });
+  const booksId = books.map((book) => book.id);
+  const result = await BookModel.updateMany(
+    { status: 1, number: { $gt: 0 } },
+    { status: 0 },
   ).exec();
   res.json({ result, books: booksId });
 });

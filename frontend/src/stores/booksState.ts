@@ -35,10 +35,21 @@ const useBooksStore = defineStore('books', {
         return book;
       });
     },
+    stopOrdering(booksID: string[]) {
+      this.books = this.books.map((book) => {
+        if (booksID.includes(book.id)) {
+          return { ...book, status: 0 };
+        }
+        return book;
+      });
+    },
   },
   getters: {
     shuffled(state) {
       return shuffle(state.books);
+    },
+    haveBooksOrdering(state) {
+      return !!state.books.find((book) => book.status === 1);
     },
   },
 });
