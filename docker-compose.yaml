@@ -21,4 +21,4 @@ services:
       - ./log:/usr/src/app/backend/log
     environment:
       - JWT_SECRETS=114514
-      - MONGO_ADDRESS=mongo
+      - MONGO_URL=mongodb://mongo:27017/bookExchange

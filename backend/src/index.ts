@@ -1,11 +1,10 @@
 import http from 'http';
 import mongoose from 'mongoose';
 import app from './app';
-import { mongoAddress, mongoPassword, mongoPort, mongoUser } from './config';
+import { mongoUrl } from './config';
 import logger from './utils/logger';
 
-const prefix = mongoUser && mongoPassword ? `${mongoUser}:${mongoPassword}@` : '';
-const mongoUrl = `mongodb://${prefix}${mongoAddress}:${mongoPort}/bookExchange`;
+console.log(`Attempting to connect to url ${mongoUrl}`)
 
 mongoose.connect(mongoUrl).then(() => {
   const server = http.createServer(app);
