@@ -84,7 +84,7 @@ userRouter.get('/me', async (req, res) => {
   const resBody = user.toJSON();
   const [orderedBooks, committedBooks] = await Promise.all([
     BookModel.count({ orderBy: user.id }),
-    BookModel.count({ owner: user.id, status: { $gte: 1 } }),
+    BookModel.count({ owner: user.id, number: { $gt: 0 } }),
   ]);
   // eslint-disable-next-line no-underscore-dangle
   const id = resBody._id;

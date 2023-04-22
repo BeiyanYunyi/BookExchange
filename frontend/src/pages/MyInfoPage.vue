@@ -14,7 +14,7 @@
       <NDescriptionsItem label="班级">
         {{ user.class }}
       </NDescriptionsItem>
-      <NDescriptionsItem label="已预定 / 已贡献">
+      <NDescriptionsItem label="已预定 / 已捐出">
         {{ user.orderedBooks }} 本 / {{ user.committedBooks }} 本
       </NDescriptionsItem>
     </NDescriptions>
