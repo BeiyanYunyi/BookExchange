@@ -1,16 +1,18 @@
-import { IsRevoked, Params } from 'express-jwt';
-import { jwtSecret } from '../config';
-import UserModel from '../models/UserModel';
-import logger from './logger';
+import { eq } from 'drizzle-orm';
+import type { IsRevoked, Params } from 'express-jwt';
+import { jwtSecret } from '../config.js';
+import { userModel } from '../drizzle/schema.js';
+import db from './db.js';
+import logger from './logger.js';
 
 const tokenChecker: IsRevoked = async (_req: any, jwt) => {
-  if (!jwt?.payload) return Promise.reject(true);
+  if (!jwt?.payload) return true;
   const { payload } = jwt;
-  if (typeof payload === 'string') return Promise.reject(true);
-  const userInDB = await UserModel.findById(payload.id);
-  if (userInDB === null || !payload.iat || payload.iat < Number(userInDB.lastRevokeTime)) {
+  if (typeof payload === 'string') return true;
+  const userInDB = await db.query.userModel.findFirst({ where: eq(userModel.id, payload.id) });
+  if (!userInDB || !payload.iat || payload.iat < userInDB.lastRevokeTime) {
     logger.error(payload.id);
-    return Promise.reject(true);
+    return true;
   }
   return Promise.resolve(false);
 };

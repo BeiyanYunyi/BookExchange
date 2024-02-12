@@ -21,7 +21,7 @@ bookRouter.get('/', async (req, res) => {
   let reqUser: User | null = null;
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      const user = jwt.decode(req.headers.authorization.replace('Bearer ', '')) as Express.User;
+      const user = jwt.decode(req.headers.authorization.replace('Bearer ', '')) as Express.Auth;
       const userInDB = await UserModel.findById(user.id);
       if (userInDB !== null && user.iat >= Number(userInDB.lastRevokeTime)) {
         reqUser = userInDB;

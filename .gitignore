@@ -12,3 +12,5 @@ dist-ssr
 *.local
 db
 .env
+db.sqlite
+

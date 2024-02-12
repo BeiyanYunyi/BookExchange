@@ -1,6 +1,6 @@
 declare namespace Express {
   export interface Auth {
-    id: string;
+    id: number;
     iat: number;
   }
   export interface Request {
