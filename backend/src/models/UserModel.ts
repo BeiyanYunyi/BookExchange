@@ -24,7 +24,7 @@ export class User {
   stuNum!: string;
 
   @prop()
-  collage!: string;
+  college!: string;
 
   @prop()
   class!: string;

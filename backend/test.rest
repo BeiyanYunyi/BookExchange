@@ -5,7 +5,7 @@ Content-Type: application/json
   "name": "李北群",
   "password": "114514",
   "stuNum": "114514364364",
-  "collage": "行政楼",
+  "college": "行政楼",
   "class": "114班"
 }
 

@@ -11,7 +11,7 @@
         <NInput v-model:value="model.name" placeholder="请输入姓名" />
       </NFormItem>
       <NFormItem path="stuNum" label="学院">
-        <NInput v-model:value="model.collage" placeholder="请输入学院" />
+        <NInput v-model:value="model.college" placeholder="请输入学院" />
       </NFormItem>
       <NFormItem path="stuNum" label="班级">
         <NInput v-model:value="model.class" placeholder="请输入班级" />
@@ -45,7 +45,7 @@ import useAuthStore from '../stores/authState';
 const router = useRouter();
 const route = useRoute();
 const message = useMessage();
-const initState: IRegisterInfo = { name: '', password: '', stuNum: '', collage: '', class: '' };
+const initState: IRegisterInfo = { name: '', password: '', stuNum: '', college: '', class: '' };
 const model = ref<IRegisterInfo>(initState);
 const rules: FormRules = {
   name: [
@@ -72,7 +72,7 @@ const rules: FormRules = {
       },
     },
   ],
-  collage: [{ required: true, trigger: ['input', 'blur'], message: '不得为空' }],
+  college: [{ required: true, trigger: ['input', 'blur'], message: '不得为空' }],
   class: [{ required: true, trigger: ['input', 'blur'], message: '不得为空' }],
 };
 const authState = useAuthStore();

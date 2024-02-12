@@ -27,7 +27,7 @@ const createColumns = (): DataTableColumns<IUserMe & { key: string }> => [
   { title: '学号', key: 'stuNum' },
   { title: '姓名', key: 'name' },
   { title: '头像', key: 'avatar' },
-  { title: '学院', key: 'collage' },
+  { title: '学院', key: 'college' },
   { title: '班级', key: 'class' },
   {
     title: '身份',

@@ -9,7 +9,7 @@
         {{ user.stuNum }}
       </NDescriptionsItem>
       <NDescriptionsItem label="学院">
-        {{ user.collage }}
+        {{ user.college }}
       </NDescriptionsItem>
       <NDescriptionsItem label="班级">
         {{ user.class }}

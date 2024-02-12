@@ -19,7 +19,7 @@ const userRouter = express.Router();
 
 userRouter.post('/', async (req, res) => {
   const { body } = req as {
-    body: { name: string; password: string; stuNum: string; collage: string; class: string };
+    body: { name: string; password: string; stuNum: string; college: string; class: string };
   };
   const exist = await db.query.userModel.findFirst({ where: eq(userModel.stuNum, body.stuNum) });
   if (exist) throw new ConflictError('student number conflicted');
@@ -32,7 +32,7 @@ userRouter.post('/', async (req, res) => {
       password,
       role: count ? UserRoleEnum.default : UserRoleEnum.admin,
       stuNum: body.stuNum,
-      collage: body.collage,
+      college: body.college,
       class: body.class,
       lastRevokeTime: Date.now(),
     })
@@ -42,7 +42,7 @@ userRouter.post('/', async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const { id } = resBody;
   const token = jwt.sign({ id, iat: Date.now() }, jwtSecret);
-  const info = lodash.pick(resBody, ['name', 'role', 'stuNum', 'collage', 'class', 'avatar']);
+  const info = lodash.pick(resBody, ['name', 'role', 'stuNum', 'college', 'class', 'avatar']);
   res.json({ info: { ...info, id }, token });
 });
 
@@ -83,7 +83,7 @@ userRouter.get('/me', async (req, res) => {
   });
   if (!user) throw new NotFoundError('User Not Found');
   // eslint-disable-next-line no-underscore-dangle
-  const info = lodash.pick(user, ['name', 'role', 'stuNum', 'collage', 'class', 'avatar', 'id']);
+  const info = lodash.pick(user, ['name', 'role', 'stuNum', 'college', 'class', 'avatar', 'id']);
   res.json({ ...info, orderedBooks: user.ordered.length, committedBooks: user.owned.length });
 });
 

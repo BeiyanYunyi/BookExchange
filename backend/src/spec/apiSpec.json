@@ -12,12 +12,12 @@
               "schema": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["name", "password", "stuNum", "collage", "class"],
+                "required": ["name", "password", "stuNum", "college", "class"],
                 "properties": {
                   "name": { "type": "string", "nullable": false, "minLength": 1, "maxLength": 32 },
                   "password": { "$ref": "#/components/schemas/password" },
                   "stuNum": { "$ref": "#/components/schemas/stuNum" },
-                  "collage": { "type": "string", "nullable": false },
+                  "college": { "type": "string", "nullable": false },
                   "class": { "type": "string", "nullable": false }
                 }
               }

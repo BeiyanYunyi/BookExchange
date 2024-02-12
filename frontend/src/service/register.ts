@@ -6,7 +6,7 @@ export interface IRegisterInfo {
   name: string;
   password: string;
   stuNum: string;
-  collage: string;
+  college: string;
   class: string;
 }
 

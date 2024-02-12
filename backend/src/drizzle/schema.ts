@@ -21,7 +21,7 @@ export const userModel = sqliteTable('users', {
   avatar: text('avatar').default(sql`null`),
   role: integer('role').default(UserRoleEnum.default).notNull(),
   stuNum: text('stuNum').unique().notNull(),
-  collage: text('collage'),
+  college: text('college'),
   class: text('class'),
   lastRevokeTime: integer('lastRevokeTime').default(0).notNull(),
 });

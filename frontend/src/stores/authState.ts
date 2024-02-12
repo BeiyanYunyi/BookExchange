@@ -6,7 +6,7 @@ const useAuthStore = defineStore('auth', {
     const user: IUserMe = {
       stuNum: '',
       role: 0,
-      collage: '',
+      college: '',
       class: '',
       id: '',
       name: '',
