@@ -61,7 +61,13 @@
       "object.groupby": "npm:@nolyfill/object.groupby@latest",
       "object.values": "npm:@nolyfill/object.values@latest",
       "side-channel": "npm:@nolyfill/side-channel@latest",
-      "typedarray": "npm:@nolyfill/typedarray@latest"
+      "typedarray": "npm:@nolyfill/typedarray@latest",
+      "function-bind": "npm:@nolyfill/function-bind@latest",
+      "has-proto": "npm:@nolyfill/has-proto@latest",
+      "has-symbols": "npm:@nolyfill/has-symbols@latest",
+      "jsonify": "npm:@nolyfill/jsonify@latest",
+      "object-keys": "npm:@nolyfill/object-keys@latest",
+      "set-function-length": "npm:@nolyfill/set-function-length@latest"
     }
   }
 }
