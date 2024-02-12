@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-import { Ref } from '@typegoose/typegoose';
-import { User } from '../models/UserModel';
+import { type Ref } from '@typegoose/typegoose';
+import { User } from '../models/UserModel.js';
 
 const userParser = (user: Ref<User, string | undefined>) => {
   if (typeof user === 'object') {

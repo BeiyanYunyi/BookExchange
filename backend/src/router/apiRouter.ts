@@ -1,19 +1,22 @@
 import express from 'express';
-import * as OpenApiValidator from 'express-openapi-validator';
-import errorHandler from '../middlewares/errorHandler';
-import requestLogger from '../middlewares/requestLogger';
-import apiSpec from '../spec/apiSpec';
-import authRouter from './authRouter';
-import bookRouter from './bookRouter';
-import userRouter from './userRouter';
+import { middleware } from 'express-openapi-validator';
+import errorHandler from '../middlewares/errorHandler.js';
+import requestLogger from '../middlewares/requestLogger.js';
+import authRouter from './authRouter.js';
+import bookRouter from './bookRouter.js';
+import userRouter from './userRouter.js';
 
-require('express-async-errors');
+await import('express-async-errors');
 
 const apiRouter = express.Router();
 apiRouter.use(express.json());
 apiRouter.use(requestLogger);
 apiRouter.use(
-  OpenApiValidator.middleware({ apiSpec, validateResponses: false, validateApiSpec: true }),
+  middleware({
+    apiSpec: './src/spec/apiSpec.json',
+    validateResponses: false,
+    validateApiSpec: true,
+  }),
 );
 apiRouter.use('/user', userRouter);
 apiRouter.use('/auth', authRouter);

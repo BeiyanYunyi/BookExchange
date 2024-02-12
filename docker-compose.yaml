@@ -1,24 +1,29 @@
 version: '3.4'
 
+volumes:
+  db:
+
 services:
-  mongo: 
+  mongo:
     image: mongo
     restart: always
     volumes:
-      - ./db:/data/db
-  bookexchange:
-    depends_on:
-      - mongo
-    image: ghcr.io/beiyanyunyi/bookexchange:main
-    container_name: bookexchange
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+      - db:/data/db
     ports:
-      - 3000:3001
-    volumes:
-      - ./.env:/usr/src/app/backend/.env
-      - ./log:/usr/src/app/backend/log
-    environment:
-      - JWT_SECRETS=114514
-      - MONGO_URL=mongodb://mongo:27017/bookExchange
+      - 27017:27017
+  # bookexchange:
+  #   depends_on:
+  #     - mongo
+  #   image: ghcr.io/beiyanyunyi/bookexchange:main
+  #   container_name: bookexchange
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - 3000:3001
+  #   volumes:
+  #     - ./.env:/usr/src/app/backend/.env
+  #     - ./log:/usr/src/app/backend/log
+  #   environment:
+  #     - JWT_SECRETS=114514
+  #     - MONGO_URL=mongodb://mongo:27017/bookExchange

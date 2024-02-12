@@ -1,14 +1,14 @@
 import express from 'express';
-import expressJwt from 'express-jwt';
+import { expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
-import NotFoundError from '../errors/NotFoundError';
-import UserModel from '../models/UserModel';
-import expressjwtOptions from '../utils/expressJwtConstructor';
-import { jwtSecret } from '../config';
+import { jwtSecret } from '../config.js';
+import NotFoundError from '../errors/NotFoundError.js';
+import UserModel from '../models/UserModel.js';
+import expressjwtOptions from '../utils/expressJwtConstructor.js';
 
 const authRouter = express.Router();
 
-require('express-async-errors');
+await import('express-async-errors');
 
 authRouter.post('/login', async (req, res) => {
   const { body } = req as { body: { stuNum: string; password: string } };
@@ -21,10 +21,10 @@ authRouter.post('/login', async (req, res) => {
   res.json({ token });
 });
 
-authRouter.use(expressJwt(expressjwtOptions));
+authRouter.use(expressjwt(expressjwtOptions));
 
 authRouter.get('/logout', async (req, res) => {
-  const stu = await UserModel.findById(req.user!.id);
+  const stu = await UserModel.findById(req.auth!.id);
   if (!stu) throw new NotFoundError('Student Not Found');
   stu.lastRevokeTime = Date.now();
   await stu.save();

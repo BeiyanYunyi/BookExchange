@@ -1,9 +1,9 @@
 import cors from 'cors';
 import express from 'express';
 import path from 'path';
-import NumberModel from './models/NumberModel';
-import apiRouter from './router/apiRouter';
-import route from './utils/route';
+import NumberModel from './models/NumberModel.js';
+import apiRouter from './router/apiRouter.js';
+import route from './utils/route.js';
 
 const app = express();
 app.use(cors());

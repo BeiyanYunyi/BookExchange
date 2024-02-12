@@ -1,19 +1,19 @@
 /* eslint-disable no-underscore-dangle */
 import express from 'express';
+import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
-import expressJwt, { UnauthorizedError } from 'express-jwt';
 import lodash from 'lodash';
-import BadRequestError from '../errors/BadRequestError';
-import ConflictError from '../errors/ConflictError';
-import NotFoundError from '../errors/NotFoundError';
-import BookModel, { Book } from '../models/BookModel';
-import UserModel, { User } from '../models/UserModel';
-import expressJwtOptions from '../utils/expressJwtConstructor';
-import userParser from '../utils/userParser';
-import logger from '../utils/logger';
-import NumberModel from '../models/NumberModel';
+import BadRequestError from '../errors/BadRequestError.js';
+import ConflictError from '../errors/ConflictError.js';
+import NotFoundError from '../errors/NotFoundError.js';
+import BookModel, { Book } from '../models/BookModel.js';
+import NumberModel from '../models/NumberModel.js';
+import UserModel, { User } from '../models/UserModel.js';
+import expressJwtOptions from '../utils/expressJwtConstructor.js';
+import logger from '../utils/logger.js';
+import userParser from '../utils/userParser.js';
 
-require('express-async-errors');
+await import('express-async-errors');
 
 const bookRouter = express.Router();
 
@@ -55,10 +55,10 @@ bookRouter.get('/', async (req, res) => {
   res.json(books);
 });
 
-bookRouter.use(expressJwt(expressJwtOptions));
+bookRouter.use(expressjwt(expressJwtOptions));
 
 bookRouter.post('/ordering', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const user = await UserModel.findById(id);
   if (!user || user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
@@ -72,7 +72,7 @@ bookRouter.post('/ordering', async (req, res) => {
 });
 
 bookRouter.delete('/ordering', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const user = await UserModel.findById(id);
   if (!user || user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
@@ -86,7 +86,7 @@ bookRouter.delete('/ordering', async (req, res) => {
 });
 
 bookRouter.post('/', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const user = await UserModel.findById(id);
   if (!user)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
@@ -118,7 +118,7 @@ bookRouter.post('/', async (req, res) => {
 
 /** 预定 / 取消预定 */
 bookRouter.patch('/:bookID', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const [user, book] = await Promise.all([
     UserModel.findById(id),
     BookModel.findById(req.params.bookID),
@@ -134,8 +134,8 @@ bookRouter.patch('/:bookID', async (req, res) => {
     throw new ConflictError('[409] The book was ordered.');
   if (book.status === 1) {
     const [orderedBooks, committedBooks] = await Promise.all([
-      BookModel.count({ orderBy: id }),
-      BookModel.count({ owner: id, status: { $gte: 1 } }),
+      BookModel.countDocuments({ orderBy: id }),
+      BookModel.countDocuments({ owner: id, status: { $gte: 1 } }),
     ]);
     if (orderedBooks >= committedBooks)
       throw new BadRequestError('[400] You have ordered the max amount of books');
@@ -167,7 +167,7 @@ bookRouter.patch('/:bookID', async (req, res) => {
 });
 
 bookRouter.put('/:bookID', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const [user, book] = await Promise.all([
     UserModel.findById(id),
     BookModel.findById(req.params.bookID),
@@ -207,7 +207,7 @@ bookRouter.put('/:bookID', async (req, res) => {
 });
 
 bookRouter.get('/:bookID', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const [user, book, latest] = await Promise.all([
     UserModel.findById(id),
     BookModel.findById(req.params.bookID).populate('owner').populate('orderBy'),
@@ -237,7 +237,7 @@ bookRouter.get('/:bookID', async (req, res) => {
 });
 
 bookRouter.get('/:bookID/receive', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const [user, book] = await Promise.all([
     UserModel.findById(id),
     BookModel.findById(req.params.bookID).populate('owner').populate('orderBy'),
@@ -265,7 +265,7 @@ bookRouter.get('/:bookID/receive', async (req, res) => {
 });
 
 bookRouter.delete('/:bookID', async (req, res) => {
-  const { id } = req.user!;
+  const { id } = req.auth!;
   const [user, book] = await Promise.all([
     UserModel.findById(id),
     BookModel.findById(req.params.bookID).populate('owner').populate('orderBy'),

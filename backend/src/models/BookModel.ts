@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
-import { getModelForClass, prop, Ref } from '@typegoose/typegoose';
+import { getModelForClass, prop, type Ref } from '@typegoose/typegoose';
 import mongoose from 'mongoose';
-import { User } from './UserModel';
+import { User } from './UserModel.js';
 
 export enum BookStatusEnum {
   pending = 0,
