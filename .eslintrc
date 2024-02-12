@@ -30,6 +30,7 @@
     "vue/html-self-closing": 0,
     "vue/html-indent": 0,
     "vue/html-closing-bracket-newline": 0,
+    "import/extensions": 0,
   },
   "parserOptions": {
     "project": "./tsconfig.json",

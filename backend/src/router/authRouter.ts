@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import express from 'express';
 import { expressjwt } from 'express-jwt';
@@ -17,7 +18,8 @@ authRouter.post('/login', async (req, res) => {
   const stu = await db.query.userModel.findFirst({
     where: eq(userModel.stuNum, body.stuNum),
   });
-  if (!stu) throw new NotFoundError('Student Number Not Found');
+  const valid = await bcrypt.compare(body.password, stu?.password || '');
+  if (!stu || !valid) throw new NotFoundError('Student number does not match with password');
   const token = jwt.sign({ id: stu.id, iat: Date.now() }, jwtSecret);
   res.json({ token });
 });
