@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { eq } from 'drizzle-orm';
-import express from 'express';
+import express, { type Router } from 'express';
 import { expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../config.js';
@@ -9,7 +9,7 @@ import NotFoundError from '../errors/NotFoundError.js';
 import db from '../utils/db.js';
 import expressjwtOptions from '../utils/expressJwtConstructor.js';
 
-const authRouter = express.Router();
+const authRouter: Router = express.Router();
 
 await import('express-async-errors');
 

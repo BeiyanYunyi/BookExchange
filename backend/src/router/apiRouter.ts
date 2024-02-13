@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Router } from 'express';
 import { middleware } from 'express-openapi-validator';
 import errorHandler from '../middlewares/errorHandler.js';
 import requestLogger from '../middlewares/requestLogger.js';
@@ -8,7 +8,7 @@ import userRouter from './userRouter.js';
 
 await import('express-async-errors');
 
-const apiRouter = express.Router();
+const apiRouter: Router = express.Router();
 apiRouter.use(express.json());
 apiRouter.use(requestLogger);
 apiRouter.use(

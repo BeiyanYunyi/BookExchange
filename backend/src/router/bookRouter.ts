@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { and, count, eq, gt, gte } from 'drizzle-orm';
-import express from 'express';
+import express, { type Router } from 'express';
 import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
 import lodash from 'lodash';
@@ -22,7 +22,7 @@ import userParser from '../utils/userParser.js';
 
 await import('express-async-errors');
 
-const bookRouter = express.Router();
+const bookRouter: Router = express.Router();
 
 bookRouter.get('/', async (req, res) => {
   let reqUser:

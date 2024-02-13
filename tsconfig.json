@@ -10,7 +10,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom", "DOM.Iterable"],
-    "outDir": "dist"
+    "outDir": "dist",
+    "noEmit": true
   },
   "include": [
     "frontend/src/**/*.tsx",

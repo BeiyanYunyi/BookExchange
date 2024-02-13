@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcryptjs';
 import { count as dCount, eq } from 'drizzle-orm';
-import express from 'express';
+import express, { type Router } from 'express';
 import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
 import lodash from 'lodash';
@@ -14,7 +14,7 @@ import expressjwtOptions from '../utils/expressJwtConstructor.js';
 
 await import('express-async-errors');
 
-const userRouter = express.Router();
+const userRouter: Router = express.Router();
 
 userRouter.post('/', async (req, res) => {
   const { body } = req as {
