@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { and, count, eq, gt, gte, max } from 'drizzle-orm';
+import { and, count, eq, gt, gte, sql } from 'drizzle-orm';
 import express, { type Router } from 'express';
 import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
@@ -93,15 +93,12 @@ bookRouter.post('/ordering', async (req, res) => {
   const user = await db.query.userModel.findFirst({ where: eq(userModel.id, id) });
   if (!user || user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
-  const books = await db.query.bookModel.findMany({
-    where: and(eq(bookModel.status, 0), gt(bookModel.number, 0)),
-  });
-  const booksId = books.map((book) => book.id);
   const result = await db
     .update(bookModel)
     .set({ status: 1 })
-    .where(and(eq(bookModel.status, 0), gt(bookModel.number, 0)));
-  res.json({ result, books: booksId });
+    .where(and(eq(bookModel.status, 0), gt(bookModel.number, 0)))
+    .returning({ id: bookModel.id });
+  res.json({ result, books: result.map((book) => book.id) });
 });
 
 bookRouter.delete('/ordering', async (req, res) => {
@@ -109,15 +106,12 @@ bookRouter.delete('/ordering', async (req, res) => {
   const user = await db.query.userModel.findFirst({ where: eq(userModel.id, id) });
   if (!user || user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
-  const books = await db.query.bookModel.findMany({
-    where: and(eq(bookModel.status, 1), gt(bookModel.number, 0)),
-  });
-  const booksId = books.map((book) => book.id);
   const result = await db
     .update(bookModel)
     .set({ status: 0 })
-    .where(and(eq(bookModel.status, 1), gt(bookModel.number, 0)));
-  res.json({ result, books: booksId });
+    .where(and(gte(bookModel.status, 1), gt(bookModel.number, 0)))
+    .returning({ id: bookModel.id });
+  res.json({ result, books: result.map((book) => book.id) });
 });
 
 bookRouter.post('/', async (req, res) => {
@@ -276,23 +270,19 @@ bookRouter.put('/:bookID', async (req, res) => {
 
 bookRouter.get('/:bookID', async (req, res) => {
   const { id } = req.auth!;
-  const [user, book, latest] = await Promise.all([
+  const [user, book] = await Promise.all([
     db.query.userModel.findFirst({ where: eq(userModel.id, id) }),
     db.query.bookModel.findFirst({
       where: eq(bookModel.id, Number(req.params.bookID)),
       with: { owner: true, orderBy: true },
     }),
-    db
-      .select({ value: max(bookModel.number) })
-      .from(bookModel)
-      .then((resu) => resu[0].value || 0),
   ]);
   if (!user || user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
   if (!book) throw new NotFoundError('[404] Book not found');
   await db
     .update(bookModel)
-    .set({ number: latest + 1 })
+    .set({ number: sql<number>`(select max("number") from "books") + 1` })
     .where(eq(bookModel.id, book.id));
   const nBook = await db.query.bookModel.findFirst({
     where: eq(bookModel.id, Number(req.params.bookID)),
