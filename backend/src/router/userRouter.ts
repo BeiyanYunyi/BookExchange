@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import bcrypt from 'bcryptjs';
+import bcrypt from '@node-rs/bcrypt';
 import { count as dCount, eq } from 'drizzle-orm';
 import express, { type Router } from 'express';
 import { UnauthorizedError, expressjwt } from 'express-jwt';

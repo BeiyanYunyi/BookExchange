@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import { and, count, eq, gt, gte } from 'drizzle-orm';
+import { and, count, eq, gt, gte, max } from 'drizzle-orm';
 import express, { type Router } from 'express';
 import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
@@ -7,7 +7,6 @@ import lodash from 'lodash';
 import {
   UserRoleEnum,
   bookModel,
-  numberModel,
   tagModel,
   tagsToBooksModel,
   userModel,
@@ -130,19 +129,24 @@ bookRouter.post('/', async (req, res) => {
     body,
   }: { body: { title: string; desc: string; author: string; tags: string[]; img: string } } = req;
   const { tags, ...otherBody } = body;
-  await db
-    .insert(tagModel)
-    .values(body.tags.map((tag) => ({ name: tag })))
-    .onConflictDoNothing();
+  const hasTags = !!tags.length;
+  if (hasTags) {
+    await db
+      .insert(tagModel)
+      .values(body.tags.map((tag) => ({ name: tag })))
+      .onConflictDoNothing();
+  }
   const book = (
     await db
       .insert(bookModel)
       .values([{ ...otherBody, owner: user.id, status: 0 }])
       .returning()
   )[0];
-  await db
-    .insert(tagsToBooksModel)
-    .values(Array.from(new Set(tags)).map((tag) => ({ tagName: tag, bookId: book.id })));
+  if (hasTags) {
+    await db
+      .insert(tagsToBooksModel)
+      .values(Array.from(new Set(tags)).map((tag) => ({ tagName: tag, bookId: book.id })));
+  }
   const bookToReturn = lodash.pick(book, [
     'title',
     'desc',
@@ -278,20 +282,18 @@ bookRouter.get('/:bookID', async (req, res) => {
       where: eq(bookModel.id, Number(req.params.bookID)),
       with: { owner: true, orderBy: true },
     }),
-    db.query.numberModel.findFirst({ where: eq(numberModel.id, 1) }),
+    db
+      .select({ value: max(bookModel.number) })
+      .from(bookModel)
+      .then((resu) => resu[0].value || 0),
   ]);
   if (!user || user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
   if (!book) throw new NotFoundError('[404] Book not found');
-  const save1 = db
+  await db
     .update(bookModel)
-    .set({ number: latest!.latest + 1 })
+    .set({ number: latest + 1 })
     .where(eq(bookModel.id, book.id));
-  const save2 = db
-    .update(numberModel)
-    .set({ latest: latest!.latest + 1 })
-    .where(eq(numberModel.id, 1));
-  await Promise.all([save1, save2]);
   const nBook = await db.query.bookModel.findFirst({
     where: eq(bookModel.id, Number(req.params.bookID)),
     with: { owner: true, orderBy: true },

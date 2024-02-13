@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from '@node-rs/bcrypt';
 import { eq } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import { jwtSecret } from '../../config.js';

@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1707828492786,
+      "tag": "0000_perfect_gargoyle",
+      "breakpoints": true
+    }
+  ]
+}

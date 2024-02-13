@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from '@node-rs/bcrypt';
 import { eq } from 'drizzle-orm';
 import express, { type Router } from 'express';
 import { expressjwt } from 'express-jwt';
