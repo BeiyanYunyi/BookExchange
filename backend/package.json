@@ -4,13 +4,12 @@
   "description": "The website of the book-exchanging project in my school",
   "version": "0.0.0",
   "scripts": {
-    "start": "node --loader @swc-node/register/esm src/index.ts"
+    "start": "tsx src/index.ts"
   },
   "type": "module",
   "dependencies": {
     "@apollo/server": "^4.10.0",
     "@apollo/subgraph": "^2.7.1",
-    "@typegoose/typegoose": "^12.1.0",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^9.4.1",
     "colors": "^1.4.0",
@@ -27,12 +26,10 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
-    "mongoose": "^8.1.2",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "@swc-node/register": "^1.8.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/better-sqlite3": "^7.6.9",
     "@types/cors": "^2.8.17",
@@ -43,6 +40,7 @@
     "@types/node": "^20.11.17",
     "drizzle-kit": "^0.20.14",
     "rimraf": "^5.0.5",
+    "tsx": "^4.7.1",
     "typescript": "^5.3.3"
   },
   "packageManager": "pnpm@8.15.1"

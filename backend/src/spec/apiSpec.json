@@ -36,7 +36,7 @@
           "name": "userID",
           "in": "path",
           "required": true,
-          "schema": { "type": "string", "maxLength": 32, "minLength": 20 }
+          "schema": { "type": "string", "maxLength": 32 }
         }
       ],
       "patch": {
@@ -113,7 +113,7 @@
           "name": "bookID",
           "in": "path",
           "required": true,
-          "schema": { "type": "string", "maxLength": 32, "minLength": 20 }
+          "schema": { "type": "string", "maxLength": 32 }
         }
       ],
       "put": {
@@ -141,7 +141,7 @@
           "name": "bookID",
           "in": "path",
           "required": true,
-          "schema": { "type": "string", "maxLength": 32, "minLength": 20 }
+          "schema": { "type": "string", "maxLength": 32 }
         }
       ],
       "get": { "security": [{ "auth": ["auth"] }], "responses": { "200": { "description": "OK" } } }

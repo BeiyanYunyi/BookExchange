@@ -41,6 +41,7 @@ export const bookModel = sqliteTable('books', {
   owner: integer('owner', { mode: 'number' })
     .notNull()
     .references(() => userModel.id),
+  number: integer('number').default(0).notNull(),
 });
 
 export const tagsToBooksModel = sqliteTable(
@@ -80,3 +81,8 @@ export const userRelations = relations(userModel, ({ many }) => ({
   ordered: many(bookModel, { relationName: 'orderBy' }),
   owned: many(bookModel, { relationName: 'owner' }),
 }));
+
+export const numberModel = sqliteTable('numbers', {
+  id: integer('id').primaryKey(),
+  latest: integer('latest').default(0).notNull(),
+});

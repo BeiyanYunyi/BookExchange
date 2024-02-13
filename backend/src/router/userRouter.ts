@@ -6,10 +6,9 @@ import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
 import lodash from 'lodash';
 import { jwtSecret, saltRounds } from '../config.js';
-import { userModel } from '../drizzle/schema.js';
+import { UserRoleEnum, userModel } from '../drizzle/schema.js';
 import ConflictError from '../errors/ConflictError.js';
 import NotFoundError from '../errors/NotFoundError.js';
-import UserModel, { UserRoleEnum } from '../models/UserModel.js';
 import db from '../utils/db.js';
 import expressjwtOptions from '../utils/expressJwtConstructor.js';
 
@@ -68,11 +67,16 @@ userRouter.get('/', async (req, res) => {
 });
 
 userRouter.patch('/:userID', async (req, res) => {
-  const user = await UserModel.findById(req.auth!.id);
+  const user = await db.query.userModel.findFirst({
+    where: eq(userModel.id, req.auth!.id),
+  });
   if (!user) throw new NotFoundError('User Not Found');
   if (user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: "You can't do this!." });
-  await UserModel.findByIdAndUpdate(req.params.userID, { role: 1 }, { new: true });
+  await db
+    .update(userModel)
+    .set({ role: UserRoleEnum.admin })
+    .where(eq(userModel.id, Number(req.params.userID)));
   res.status(200).send();
 });
 
