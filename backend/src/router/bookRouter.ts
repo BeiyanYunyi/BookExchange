@@ -151,9 +151,10 @@ bookRouter.post('/', async (req, res) => {
     'number',
     'id',
   ]);
-  res.json({
+  res.status(201).json({
     ...bookToReturn,
     owner: userParser(user),
+    tags: Array.from(new Set(tags)),
   });
 });
 

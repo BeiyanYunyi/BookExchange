@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   root: './frontend',
   plugins: [vue()],
-  server: { proxy: { '/api': 'http://127.0.0.1:3001' } },
+  server: { proxy: { '/api': 'http://127.0.0.1:3001' }, host: '127.0.0.1' },
   build: { outDir: '../backend/static', emptyOutDir: true },
-  test: { root: '.' },
+  test: { root: '.', coverage: { enabled: true, provider: 'v8' } },
 });

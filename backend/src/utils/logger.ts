@@ -113,8 +113,10 @@ const consoleTransport = new winston.transports.Console({
   level: !argv.dev ? 'verbose' : 'silly',
 });
 
+const testing = process.env.MODE === 'test';
+
 const logger = winston.createLogger({
-  transports: [drfAllTransport, drfErrorTransport, consoleTransport],
+  transports: testing ? [consoleTransport] : [drfAllTransport, drfErrorTransport, consoleTransport],
 });
 
 export default logger;

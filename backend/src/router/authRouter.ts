@@ -32,7 +32,7 @@ authRouter.get('/logout', async (req, res) => {
   });
   if (!stu) throw new NotFoundError('Student Not Found');
   await db.update(userModel).set({ lastRevokeTime: Date.now() });
-  res.status(200).send();
+  res.status(204).send();
 });
 
 export default authRouter;
