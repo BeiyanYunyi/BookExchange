@@ -14,7 +14,7 @@ const tokenChecker: IsRevoked = async (_req: any, jwt) => {
     logger.error(payload.id);
     return true;
   }
-  return Promise.resolve(false);
+  return false;
 };
 
 const expressjwtOptions: Params = {
