@@ -353,6 +353,7 @@ bookRouter.delete('/:bookID', async (req, res) => {
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
   if (book.number !== 0 && user.role !== 1)
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
+  await db.delete(tagsToBooksModel).where(eq(tagsToBooksModel.bookId, book.id));
   await db.delete(bookModel).where(eq(bookModel.id, book.id));
   res.status(204).send();
 });

@@ -10,10 +10,16 @@ describe.sequential('main', () => {
   const password = randomUUID().replace(/-/g, '');
   let adminToken = '';
   let token = '';
+  let adminBookId: number;
   afterEach(async () => {
     await new Promise((res) => {
       setImmediate(res);
     });
+  });
+
+  it('Smoke test', async ({ expect }) => {
+    const res = await api.get('/api/').expect(200).expect('Content-Type', /json/);
+    expect(res.body).toEqual({ message: 'Hello, BookExchange here, what do you want to do?' });
   });
 
   it('Able to get books', async ({ expect }) => {
@@ -122,6 +128,42 @@ describe.sequential('main', () => {
         const res = await api.post(`/api/book/ordering`).set('Authorization', `Bearer ${token}`);
         expect(res.status).toBe(401);
       });
+      it('Default user should not be able to mark book as received', async ({ expect }) => {
+        const res = await api
+          .get(`/api/book/${bookId}/receive`)
+          .set('Authorization', `Bearer ${token}`);
+        expect(res.status).toBe(401);
+      });
+      describe.sequential('Create book, then delete', () => {
+        let bookIdTmp: number;
+        it('Submit book', async ({ expect }) => {
+          const res = await api
+            .post('/api/book')
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+              title: '東方文花帖',
+              desc: '东方文花帖',
+              author: 'ZUN',
+              tags: ['东方', 'STG'],
+              img: '',
+            })
+            .expect(201)
+            .expect('Content-Type', /json/);
+          expect(res.body.title).toBe('東方文花帖');
+          expect(res.body.desc).toBe('东方文花帖');
+          expect(res.body.author).toBe('ZUN');
+          expect(res.body.tags).toEqual(['东方', 'STG']);
+          expect(res.body.img).toBe('');
+          expect(res.body.id).toBeTruthy();
+          bookIdTmp = res.body.id;
+        });
+        it('Default user should be able to their book', async ({ expect }) => {
+          const res = await api
+            .delete(`/api/book/${bookIdTmp}`)
+            .set('Authorization', `Bearer ${token}`);
+          expect(res.status).toBe(204);
+        });
+      });
     });
     it('Able to logout', async ({ expect }) => {
       const res = await api
@@ -197,6 +239,54 @@ describe.sequential('main', () => {
         .patch(`/api/book/${bookId}`)
         .set('Authorization', `Bearer ${adminToken}`);
       expect(res.status).toBe(400);
+    });
+    it('Should be able to delete book', async ({ expect }) => {
+      const res = await api
+        .delete(`/api/book/${bookId}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+      expect(res.status).toBe(204);
+    });
+    it('Able to submit book', async ({ expect }) => {
+      const res = await api
+        .post('/api/book')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          title: '東方文花帖',
+          desc: '东方文花帖',
+          author: 'ZUN',
+          tags: ['东方', 'STG'],
+          img: '',
+        })
+        .expect(201)
+        .expect('Content-Type', /json/);
+      expect(res.body.title).toBe('東方文花帖');
+      expect(res.body.desc).toBe('东方文花帖');
+      expect(res.body.author).toBe('ZUN');
+      expect(res.body.tags).toEqual(['东方', 'STG']);
+      expect(res.body.img).toBe('');
+      expect(res.body.id).toBeTruthy();
+      adminBookId = res.body.id;
+    });
+    it('Able to mark book as received', async ({ expect }) => {
+      const res = await api
+        .get(`/api/book/${adminBookId}/receive`)
+        .set('Authorization', `Bearer ${adminToken}`);
+      expect(res.status).toBe(200);
+    });
+  });
+
+  describe.sequential('Other users behavior 2', () => {
+    it('Able to login', async ({ expect }) => {
+      const res = await api
+        .post('/api/auth/login')
+        .send({
+          stuNum: '114514001',
+          password,
+        })
+        .expect(200)
+        .expect('Content-Type', /json/);
+      expect(res.body.token).toBeTruthy();
+      token = res.body.token;
     });
   });
 });
