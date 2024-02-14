@@ -55,7 +55,7 @@
 </template>
 <script setup lang="ts">
 import { CreateOutline, HomeOutline, LogOutOutline } from '@vicons/ionicons5';
-import axios from 'axios';
+import ky from 'ky';
 import {
   NButton,
   NCard,
@@ -68,10 +68,10 @@ import {
 } from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import NALink from '../components/NALink.vue';
 import UserAvatar from '../components/UserAvatar.vue';
 import axiosClient from '../service/axiosClient';
 import useAuthStore from '../stores/authState';
-import NALink from '../components/NALink.vue';
 
 const router = useRouter();
 const authState = useAuthStore();
@@ -79,7 +79,7 @@ const { user } = storeToRefs(authState);
 const handleLogoutConfirm = async () => {
   authState.$patch({ authed: false });
   localStorage.removeItem('authToken');
-  axiosClient.changeClient(axios.create());
+  axiosClient.changeClient(ky.create({}));
   router.replace('/');
 };
 </script>

@@ -9,12 +9,16 @@ const orderBook = async (book: IFrontendBook) => {
   if (authState.user.role === 1) {
     try {
       loadingState.loading = true;
-      const res = await axiosClient.client.put<IFrontendBook>(`/api/book/${book.id}`, {
-        status: book.status === 1 ? 2 : 1,
-        orderBy: book.status === 1 ? authState.user.id : null,
-      });
+      const res = await axiosClient.client
+        .put(`/api/book/${book.id}`, {
+          json: {
+            status: book.status === 1 ? 2 : 1,
+            orderBy: book.status === 1 ? authState.user.id : null,
+          },
+        })
+        .json<IFrontendBook>();
       loadingState.loading = false;
-      return res.data;
+      return res;
     } catch (e) {
       loadingState.loading = false;
       console.error(e);
@@ -23,9 +27,9 @@ const orderBook = async (book: IFrontendBook) => {
   }
   try {
     loadingState.loading = true;
-    const res = await axiosClient.client.patch<IFrontendBook>(`/api/book/${book.id}`);
+    const res = await axiosClient.client.patch(`/api/book/${book.id}`).json<IFrontendBook>();
     loadingState.loading = false;
-    return res.data;
+    return res;
   } catch (e) {
     loadingState.loading = false;
     console.error(e);

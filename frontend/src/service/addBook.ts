@@ -10,8 +10,8 @@ export interface IAddBookParam {
 }
 
 const addBook = async (book: IAddBookParam) => {
-  const res = await axiosClient.client.post<IFrontendBook>('/api/book', book);
-  return res.data;
+  const res = await axiosClient.client.post('/api/book', { json: book }).json<IFrontendBook>();
+  return res;
 };
 
 export default addBook;

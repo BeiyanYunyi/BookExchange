@@ -12,13 +12,13 @@ interface IOrderingResult {
 }
 
 const startOrdering = async () => {
-  const res = await axiosClient.client.post<IOrderingResult>('/api/book/ordering');
-  return res.data;
+  const res = await axiosClient.client.post('/api/book/ordering').json<IOrderingResult>();
+  return res;
 };
 
 export const stopOrdering = async () => {
-  const res = await axiosClient.client.delete<IOrderingResult>('/api/book/ordering');
-  return res.data;
+  const res = await axiosClient.client.delete('/api/book/ordering').json<IOrderingResult>();
+  return res;
 };
 
 export default startOrdering;
