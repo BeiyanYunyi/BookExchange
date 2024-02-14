@@ -2,7 +2,7 @@ name: Build and publish docker container
 
 on:
   push:
-    branch: |
+    branches: |
       main
   workflow_dispatch:
 
