@@ -32,3 +32,4 @@ jobs:
         env:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: BeiyanYunyi/BookExchange
+          files: ./backend/coverage/coverage-final.json
