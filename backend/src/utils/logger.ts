@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import colors from 'colors';
 import { format } from 'date-fns/format';
+import colors from 'picocolors';
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import argv from './argv.js';
@@ -34,7 +34,7 @@ const getLevelColor = (level: TLevel) => {
   }
 };
 
-const getMethodColor: (method: THTTPMethod) => keyof colors.Color = (method) => {
+const getMethodColor = (method: THTTPMethod) => {
   switch (method) {
     case 'GET':
       return 'bgGreen';

@@ -144,9 +144,6 @@ importers:
       better-sqlite3:
         specifier: ^9.4.1
         version: 9.4.1
-      colors:
-        specifier: ^1.4.0
-        version: 1.4.0
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -186,6 +183,9 @@ importers:
       minimist:
         specifier: ^1.2.6
         version: 1.2.8
+      picocolors:
+        specifier: ^1.0.0
+        version: 1.0.0
       winston:
         specifier: ^3.11.0
         version: 3.11.0
@@ -3964,11 +3964,6 @@ packages:
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
     dev: true
-
-  /colors@1.4.0:
-    resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
-    engines: {node: '>=0.1.90'}
-    dev: false
 
   /colorspace@1.1.4:
     resolution: {integrity: sha512-BgvKJiuVu1igBUF2kEjRCZXol6wiiGbY5ipL/oVPwm0BL9sIpMIzM8IK7vwuxIIzOXMV3Ey5w+vxhm0rR/TN8w==}
