@@ -7,6 +7,7 @@
   "scripts": {
     "start": "pnpm build && pnpm start:server",
     "start:server": "pnpm --filter book-exchange-backend start",
+    "test": "pnpm --filter book-exchange-backend test:ci",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
