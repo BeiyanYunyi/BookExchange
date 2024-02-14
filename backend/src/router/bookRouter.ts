@@ -249,7 +249,7 @@ bookRouter.put('/:bookID', async (req, res) => {
   )[0];
   const updatedBook = await db.query.bookModel.findFirst({
     where: eq(bookModel.id, uBook.id),
-    with: { owner: true, orderBy: true },
+    with: { owner: true, orderBy: true, booksToTags: true },
   });
 
   const bookToReturn = lodash.pick(updatedBook, [
@@ -266,6 +266,7 @@ bookRouter.put('/:bookID', async (req, res) => {
     ...bookToReturn,
     owner: userParser(updatedBook!.owner),
     orderBy: userParser(updatedBook!.orderBy),
+    tags: updatedBook!.booksToTags.map((tag) => tag.tagName),
   });
 });
 
@@ -287,7 +288,7 @@ bookRouter.get('/:bookID', async (req, res) => {
     .where(eq(bookModel.id, book.id));
   const nBook = await db.query.bookModel.findFirst({
     where: eq(bookModel.id, Number(req.params.bookID)),
-    with: { owner: true, orderBy: true },
+    with: { owner: true, orderBy: true, booksToTags: true },
   });
   const bookToReturn = lodash.pick(nBook, [
     'title',
@@ -303,6 +304,7 @@ bookRouter.get('/:bookID', async (req, res) => {
     ...bookToReturn,
     owner: userParser(book.owner),
     orderBy: userParser(book.orderBy),
+    tags: nBook!.booksToTags.map((tag) => tag.tagName),
   });
 });
 
