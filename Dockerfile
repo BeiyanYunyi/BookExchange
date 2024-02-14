@@ -1,16 +1,16 @@
-FROM node:lts-alpine
-
-# Create app directory
+FROM node:lts-alpine as builder
 WORKDIR /usr/src/app
-
+COPY package.json pnpm-lock.yaml ./
+RUN mkdir backend && corepack enable && pnpm i
 COPY . .
-# Install app dependencies, build frontend
+RUN pnpm build
 
-RUN corepack enable && pnpm install && pnpm build
-# copy the rest of the app
-
-# expose port 3001
+FROM node:lts-alpine
+WORKDIR /usr/src/app
+RUN corepack enable
+COPY --from=builder /usr/src/app/backend/ ./backend
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+RUN pnpm i
 EXPOSE 3001
-
 # start the app
 CMD [ "pnpm", "start:server" ]
