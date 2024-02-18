@@ -18,19 +18,19 @@ const getLevelColor = (level: TLevel) => {
     case 'error':
       return 'bgRed';
     case 'debug':
-      return 'bgGray';
+      return 'bgBlack';
     case 'http':
       return 'bgBlue';
     case 'info':
       return 'bgGreen';
     case 'silly':
-      return 'bgGray';
+      return 'bgBlack';
     case 'verbose':
-      return 'bgGray';
+      return 'bgBlack';
     case 'warn':
       return 'bgYellow';
     default:
-      return 'bgGray';
+      return 'bgBlack';
   }
 };
 
@@ -59,7 +59,7 @@ const myConsoleFormat = printf(({ level, message, label, timestamp, statusCode, 
     statusColor = 'bgGreen';
   }
   if ((statusCode?.toString() as string | undefined)?.startsWith('3')) {
-    statusColor = 'bgGrey';
+    statusColor = 'bgYellow';
   }
   let strToReturn = label + colors.underline(formatDate(timestamp));
   if (level !== 'http') {
