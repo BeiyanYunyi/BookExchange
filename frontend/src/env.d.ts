@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+import '../auto-imports';
+import '../components';
+
 declare module '*.vue' {
   import type { DefineComponent } from 'vue';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types

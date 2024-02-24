@@ -5,6 +5,7 @@
     "prettier",
     "plugin:vue/vue3-recommended",
     "plugin:import/typescript",
+    "./.eslintrc-auto-import.json",
   ],
   "plugins": ["@typescript-eslint", "prettier", "vue"],
   "env": {

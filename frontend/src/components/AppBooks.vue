@@ -37,18 +37,7 @@
 </template>
 <script setup lang="ts">
 import { AddOutline } from '@vicons/ionicons5';
-import {
-  DataTableColumns,
-  NButton,
-  NDataTable,
-  NEmpty,
-  NIcon,
-  NScrollbar,
-  NSpace,
-  NTag,
-  useMessage,
-} from 'naive-ui';
-import { h, onMounted, ref } from 'vue';
+import { DataTableColumns, NSpace, NTag, useMessage } from 'naive-ui';
 import IFrontendBook from '../../../types/IFrontendBook';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';

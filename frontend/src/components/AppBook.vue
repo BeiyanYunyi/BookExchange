@@ -154,35 +154,23 @@
 </template>
 <script setup lang="ts">
 import {
+  ArrowUndoSharp,
   CheckmarkDoneOutline,
   ReturnUpBackOutline,
   TrashOutline,
-  ArrowUndoSharp,
 } from '@vicons/ionicons5';
-import {
-  NButton,
-  NCard,
-  NIcon,
-  NImage,
-  NSpace,
-  NThing,
-  NPopconfirm,
-  useMessage,
-  NModal,
-  NP,
-} from 'naive-ui';
-import { ref, watch } from 'vue';
-import getStatus from '../utils/getStatus';
+import { useMessage } from 'naive-ui';
 import IFrontendBook from '../../../types/IFrontendBook';
 import deleteBook from '../service/deleteBook';
 import getMe from '../service/getMe';
+import giveOutBook from '../service/giveOutBook';
 import orderBook from '../service/orderBook';
 import putBook from '../service/putBook';
 import receiveBook from '../service/receiveBook';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';
 import useLoadingStore from '../stores/loadingState';
-import giveOutBook from '../service/giveOutBook';
+import getStatus from '../utils/getStatus';
 
 const imgWidth = window.innerWidth * 0.08 < 50 ? 50 : window.innerWidth * 0.08;
 const initInfo: IFrontendBook = {

@@ -34,22 +34,8 @@
   </NModal>
 </template>
 <script setup lang="ts">
-import {
-  NModal,
-  NIcon,
-  NButton,
-  NCard,
-  NSpace,
-  NPopconfirm,
-  NForm,
-  NFormItem,
-  NInput,
-  NDynamicTags,
-  FormRules,
-  useMessage,
-} from 'naive-ui';
 import { CloseOutline } from '@vicons/ionicons5';
-import { ref } from 'vue';
+import { FormRules } from 'naive-ui';
 import addBook, { IAddBookParam } from '../service/addBook';
 import useBooksStore from '../stores/booksState';
 import useLoadingStore from '../stores/loadingState';
@@ -91,8 +77,6 @@ const handleSubmit = async () => {
 };
 </script>
 <style module>
-.model {
-}
 .closeButton {
   margin-left: 1rem;
 }
