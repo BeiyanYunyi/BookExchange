@@ -1,16 +1,20 @@
-FROM node:lts-alpine as builder
+FROM node:lts-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+FROM base as builder
 WORKDIR /usr/src/app
 COPY package.json pnpm-lock.yaml ./
-RUN mkdir backend && corepack enable && pnpm i
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store mkdir backend && pnpm i
 COPY . .
 RUN pnpm build
 
-FROM node:lts-alpine
+FROM base
 WORKDIR /usr/src/app
-RUN corepack enable
 COPY --from=builder /usr/src/app/backend/ ./backend
 COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
-RUN pnpm i
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm i
 EXPOSE 3001
 # start the app
 CMD [ "pnpm", "start:server" ]
