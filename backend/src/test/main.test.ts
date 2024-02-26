@@ -227,6 +227,12 @@ describe.sequential('main', () => {
           .set('Authorization', `Bearer ${adminToken}`);
         expect(res.status).toBe(200);
       });
+      it('Admin user should be able to mark book as not orderable', async ({ expect }) => {
+        const res = await api
+          .delete(`/api/book/ordering`)
+          .set('Authorization', `Bearer ${adminToken}`);
+        expect(res.status).toBe(200);
+      });
     });
     it('Able to mark book as received', async ({ expect }) => {
       const res = await api
