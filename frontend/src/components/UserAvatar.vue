@@ -11,7 +11,6 @@
 </template>
 <script setup lang="ts">
 import { Person } from '@vicons/ionicons5';
-import { NAvatar, NIcon } from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import useAuthStore from '../stores/authState';
 

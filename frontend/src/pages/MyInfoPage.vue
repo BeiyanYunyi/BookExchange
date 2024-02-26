@@ -56,16 +56,6 @@
 <script setup lang="ts">
 import { CreateOutline, HomeOutline, LogOutOutline } from '@vicons/ionicons5';
 import ky from 'ky';
-import {
-  NButton,
-  NCard,
-  NDescriptions,
-  NDescriptionsItem,
-  NH3,
-  NIcon,
-  NPopconfirm,
-  NSpace,
-} from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import NALink from '../components/NALink.vue';

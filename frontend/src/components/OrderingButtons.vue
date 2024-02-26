@@ -40,7 +40,6 @@
 </template>
 <script setup lang="ts">
 import { AddOutline } from '@vicons/ionicons5';
-import { NButton, NIcon, NPopconfirm, NSpace, useMessage } from 'naive-ui';
 import startOrdering, { stopOrdering } from '../service/ordering';
 import useAuthStore from '../stores/authState';
 import useBooksStore from '../stores/booksState';

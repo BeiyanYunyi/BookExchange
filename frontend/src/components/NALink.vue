@@ -6,7 +6,6 @@
   </RouterLink>
 </template>
 <script setup lang="ts">
-import { NA } from 'naive-ui';
 import { RouterLink } from 'vue-router';
 
 defineProps<{ to: string }>();

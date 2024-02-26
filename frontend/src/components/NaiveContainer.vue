@@ -9,15 +9,7 @@
   </NConfigProvider>
 </template>
 <script setup lang="ts">
-import {
-  darkTheme,
-  lightTheme,
-  NConfigProvider,
-  NLoadingBarProvider,
-  NGlobalStyle,
-  useOsTheme,
-  NMessageProvider,
-} from 'naive-ui';
+import { darkTheme, lightTheme, NGlobalStyle, useOsTheme } from 'naive-ui';
 
 const osThemeRef = useOsTheme();
 </script>

@@ -4,7 +4,7 @@
   </NScrollbar>
 </template>
 <script setup lang="ts">
-import { DataTableColumns, NDataTable, NP, NScrollbar } from 'naive-ui';
+import { DataTableColumns, NP } from 'naive-ui';
 import { h, onMounted, ref } from 'vue';
 import IUserMe from '../../../types/IUserMe';
 import UserAction from '../components/UserAction.vue';

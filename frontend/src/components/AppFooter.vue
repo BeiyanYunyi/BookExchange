@@ -14,9 +14,7 @@
     </NP>
   </NLayout>
 </template>
-<script setup lang="ts">
-import { NLayout, NA, NP, NDescriptions, NDescriptionsItem } from 'naive-ui';
-</script>
+<script setup lang="ts"></script>
 <style module>
 .copyleft {
   text-align: center;

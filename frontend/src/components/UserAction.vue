@@ -15,7 +15,6 @@
 </template>
 <script setup lang="ts">
 import { ChevronUp } from '@vicons/ionicons5';
-import { NButton, NIcon, NPopconfirm } from 'naive-ui';
 import IUserMe from '../../../types/IUserMe';
 import promoteUser from '../service/promoteUser';
 import useLoadingStore from '../stores/loadingState';

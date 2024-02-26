@@ -15,18 +15,7 @@
   </NCard>
 </template>
 <script setup lang="ts">
-import {
-  FormInst,
-  FormItemRule,
-  FormRules,
-  NButton,
-  NCard,
-  NForm,
-  NFormItem,
-  NInput,
-  NSpace,
-  useMessage,
-} from 'naive-ui';
+import { FormInst, FormItemRule, FormRules } from 'naive-ui';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import axiosClient from '../service/axiosClient';

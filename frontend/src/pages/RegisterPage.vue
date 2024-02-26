@@ -26,17 +26,7 @@
   </NCard>
 </template>
 <script setup lang="ts">
-import {
-  FormItemRule,
-  FormRules,
-  NButton,
-  NCard,
-  NForm,
-  NFormItem,
-  NInput,
-  NSpace,
-  useMessage,
-} from 'naive-ui';
+import { FormItemRule, FormRules } from 'naive-ui';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import register, { IRegisterInfo } from '../service/register';

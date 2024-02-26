@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { NCard, NPageHeader, useLoadingBar } from 'naive-ui';
 import { storeToRefs } from 'pinia';
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
