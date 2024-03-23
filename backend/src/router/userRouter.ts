@@ -4,7 +4,7 @@ import { count as dCount, eq } from 'drizzle-orm';
 import express, { type Router } from 'express';
 import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
-import lodash from 'lodash';
+import { omit, pick } from 'radash';
 import { jwtSecret, saltRounds } from '../config.js';
 import { UserRoleEnum, userModel } from '../drizzle/schema.js';
 import ConflictError from '../errors/ConflictError.js';
@@ -41,7 +41,7 @@ userRouter.post('/', async (req, res) => {
   // eslint-disable-next-line no-underscore-dangle
   const { id } = resBody;
   const token = jwt.sign({ id, iat: Date.now() }, jwtSecret);
-  const info = lodash.pick(resBody, ['name', 'role', 'stuNum', 'college', 'class', 'avatar']);
+  const info = pick(resBody, ['name', 'role', 'stuNum', 'college', 'class', 'avatar']);
   res.json({ info: { ...info, id }, token });
 });
 
@@ -57,7 +57,7 @@ userRouter.get('/', async (req, res) => {
   const users = await Promise.all(
     (await db.query.userModel.findMany({ with: { ordered: true, owned: true } })).map(
       async (aUser) => ({
-        ...lodash.omit(aUser, ['password', 'lastRevokeTime']),
+        ...omit(aUser, ['password', 'lastRevokeTime']),
         orderedBooks: aUser.ordered.length,
         committedBooks: aUser.owned.length,
       }),
@@ -87,7 +87,7 @@ userRouter.get('/me', async (req, res) => {
   });
   if (!user) throw new NotFoundError('User Not Found');
   // eslint-disable-next-line no-underscore-dangle
-  const info = lodash.pick(user, ['name', 'role', 'stuNum', 'college', 'class', 'avatar', 'id']);
+  const info = pick(user, ['name', 'role', 'stuNum', 'college', 'class', 'avatar', 'id']);
   res.json({ ...info, orderedBooks: user.ordered.length, committedBooks: user.owned.length });
 });
 

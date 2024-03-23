@@ -3,7 +3,7 @@ import { and, count, eq, gt, gte, sql } from 'drizzle-orm';
 import express, { type Router } from 'express';
 import { UnauthorizedError, expressjwt } from 'express-jwt';
 import jwt from 'jsonwebtoken';
-import lodash from 'lodash';
+import { pick } from 'radash';
 import {
   UserRoleEnum,
   bookModel,
@@ -62,15 +62,7 @@ bookRouter.get('/', async (req, res) => {
       with: { booksToTags: true, owner: true, orderBy: true },
     })
   ).map((book) => {
-    const bookToReturn = lodash.pick(book, [
-      'title',
-      'desc',
-      'author',
-      'img',
-      'status',
-      'number',
-      'id',
-    ]);
+    const bookToReturn = pick(book, ['title', 'desc', 'author', 'img', 'status', 'number', 'id']);
     return {
       ...bookToReturn,
       owner: userParser(book.owner),
@@ -141,16 +133,7 @@ bookRouter.post('/', async (req, res) => {
       .insert(tagsToBooksModel)
       .values(Array.from(new Set(tags)).map((tag) => ({ tagName: tag, bookId: book.id })));
   }
-  const bookToReturn = lodash.pick(book, [
-    'title',
-    'desc',
-    'author',
-    'tags',
-    'img',
-    'status',
-    'number',
-    'id',
-  ]);
+  const bookToReturn = pick(book, ['title', 'desc', 'author', 'img', 'status', 'number', 'id']);
   res.status(201).json({
     ...bookToReturn,
     owner: userParser(user),
@@ -161,60 +144,66 @@ bookRouter.post('/', async (req, res) => {
 /** 预定 / 取消预定 */
 bookRouter.patch('/:bookID', async (req, res) => {
   const { id } = req.auth!;
-  const [user, book] = await Promise.all([
-    db.query.userModel.findFirst({ where: eq(userModel.id, id) }),
-    db.query.bookModel.findFirst({ where: eq(bookModel.id, Number(req.params.bookID)) }),
-  ]);
-  if (!user)
-    throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
-  if (!book) throw new NotFoundError('[404] Book not found');
-  // 书本既不可预定又不已预定，或预定者是捐赠者本人
-  if ((book.status !== 1 && book.status !== 2) || book.owner === id)
-    throw new BadRequestError('[400] You cannot order that!');
-  // 书本已预定，且预定者不是本人
-  if (book.status === 2 && book.orderBy !== id)
-    throw new ConflictError('[409] The book was ordered.');
-  if (book.status === 1) {
-    const [orderedBooks, committedBooks] = await Promise.all([
-      db
-        .select({ value: count() })
-        .from(bookModel)
-        .where(eq(bookModel.orderBy, id))
-        .then((resu) => resu[0].value),
-      db
-        .select({ value: count() })
-        .from(bookModel)
-        .where(and(eq(bookModel.owner, id), gte(bookModel.status, 1)))
-        .then((resu) => resu[0].value),
+  await db.transaction(async (trx) => {
+    const [user, book] = await Promise.all([
+      trx.query.userModel.findFirst({ where: eq(userModel.id, id) }),
+      trx.query.bookModel.findFirst({ where: eq(bookModel.id, Number(req.params.bookID)) }),
     ]);
-    if (orderedBooks >= committedBooks)
-      throw new BadRequestError('[400] You have ordered the max amount of books');
-    await db
-      .update(bookModel)
-      .set({ orderBy: user.id, status: 2 })
-      .where(eq(bookModel.id, book.id));
-  } else {
-    await db.update(bookModel).set({ orderBy: null, status: 1 }).where(eq(bookModel.id, book.id));
-  }
-  const savedBook = (await db.query.bookModel.findFirst({
-    where: eq(bookModel.id, book.id),
-    with: { owner: true, orderBy: true },
-  }))!;
+    if (!user)
+      throw new UnauthorizedError('invalid_token', {
+        message: '[401] Unauthorized. Invalid token.',
+      });
+    if (!book) throw new NotFoundError('[404] Book not found');
+    // 书本既不可预定又不已预定，或预定者是捐赠者本人
+    if ((book.status !== 1 && book.status !== 2) || book.owner === id)
+      throw new BadRequestError('[400] You cannot order that!');
+    // 书本已预定，且预定者不是本人
+    if (book.status === 2 && book.orderBy !== id)
+      throw new ConflictError('[409] The book was ordered.');
+    if (book.status === 1) {
+      const [orderedBooks, committedBooks] = await Promise.all([
+        trx
+          .select({ value: count() })
+          .from(bookModel)
+          .where(eq(bookModel.orderBy, id))
+          .then((resu) => resu[0].value),
+        trx
+          .select({ value: count() })
+          .from(bookModel)
+          .where(and(eq(bookModel.owner, id), gte(bookModel.status, 1)))
+          .then((resu) => resu[0].value),
+      ]);
+      if (orderedBooks >= committedBooks)
+        throw new BadRequestError('[400] You have ordered the max amount of books');
+      await trx
+        .update(bookModel)
+        .set({ orderBy: user.id, status: 2 })
+        .where(eq(bookModel.id, book.id));
+    } else {
+      await trx
+        .update(bookModel)
+        .set({ orderBy: null, status: 1 })
+        .where(eq(bookModel.id, book.id));
+    }
+    const savedBook = (await trx.query.bookModel.findFirst({
+      where: eq(bookModel.id, book.id),
+      with: { owner: true, orderBy: true },
+    }))!;
 
-  const bookToReturn = lodash.pick(savedBook, [
-    'title',
-    'desc',
-    'author',
-    'tags',
-    'img',
-    'status',
-    'number',
-    'id',
-  ]);
-  res.json({
-    ...bookToReturn,
-    owner: userParser(savedBook!.owner),
-    orderBy: userParser(savedBook!.orderBy),
+    const bookToReturn = pick(savedBook, [
+      'title',
+      'desc',
+      'author',
+      'img',
+      'status',
+      'number',
+      'id',
+    ]);
+    res.json({
+      ...bookToReturn,
+      owner: userParser(savedBook!.owner),
+      orderBy: userParser(savedBook!.orderBy),
+    });
   });
 });
 
@@ -251,12 +240,11 @@ bookRouter.put('/:bookID', async (req, res) => {
     where: eq(bookModel.id, uBook.id),
     with: { owner: true, orderBy: true, booksToTags: true },
   });
-
-  const bookToReturn = lodash.pick(updatedBook, [
+  if (!updatedBook) throw new NotFoundError('[404] Book not found');
+  const bookToReturn = pick(updatedBook, [
     'title',
     'desc',
     'author',
-    'tags',
     'img',
     'status',
     'number',
@@ -290,16 +278,8 @@ bookRouter.get('/:bookID', async (req, res) => {
     where: eq(bookModel.id, Number(req.params.bookID)),
     with: { owner: true, orderBy: true, booksToTags: true },
   });
-  const bookToReturn = lodash.pick(nBook, [
-    'title',
-    'desc',
-    'author',
-    'tags',
-    'img',
-    'status',
-    'number',
-    'id',
-  ]);
+  if (!nBook) throw new NotFoundError('[404] Book not found');
+  const bookToReturn = pick(nBook, ['title', 'desc', 'author', 'img', 'status', 'number', 'id']);
   res.json({
     ...bookToReturn,
     owner: userParser(book.owner),
@@ -321,16 +301,7 @@ bookRouter.get('/:bookID/receive', async (req, res) => {
   if (!user || (book.orderBy?.id !== id && user.role !== 1))
     throw new UnauthorizedError('invalid_token', { message: '[401] Unauthorized. Invalid token.' });
   await db.update(bookModel).set({ status: 3 }).where(eq(bookModel.id, book.id));
-  const bookToReturn = lodash.pick(book, [
-    'title',
-    'desc',
-    'author',
-    'tags',
-    'img',
-    'status',
-    'number',
-    'id',
-  ]);
+  const bookToReturn = pick(book, ['title', 'desc', 'author', 'img', 'status', 'number', 'id']);
   res.json({
     ...bookToReturn,
     status: 3,

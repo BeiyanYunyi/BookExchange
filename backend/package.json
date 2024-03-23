@@ -5,6 +5,7 @@
   "version": "0.0.0",
   "scripts": {
     "start": "tsx src/index.ts",
+    "check": "tsc --noEmit",
     "test:ci": "vitest run",
     "test": "vitest --ui"
   },
@@ -21,9 +22,9 @@
     "express-jwt": "^8.4.1",
     "express-openapi-validator": "^5.1.6",
     "jsonwebtoken": "^9.0.2",
-    "lodash": "^4.17.21",
     "minimist": "^1.2.6",
     "picocolors": "^1.0.0",
+    "radash": "^12.1.0",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^5.0.0"
   },
@@ -41,6 +42,5 @@
     "supertest": "^6.3.4",
     "tsx": "^4.7.1",
     "typescript": "^5.3.3"
-  },
-  "packageManager": "pnpm@8.15.1"
+  }
 }
