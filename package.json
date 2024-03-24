@@ -10,7 +10,7 @@
     "test": "pnpm --filter book-exchange-backend test",
     "test:ci": "pnpm --filter book-exchange-backend test:ci",
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build && vue-tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {

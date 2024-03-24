@@ -1,23 +1,30 @@
 version: '3.4'
 
 services:
-  # mongo:
-  #   image: mongo
-  #   restart: always
-  #   volumes:
-  #     - db:/data/db
-  #   ports:
-  #     - 27017:27017
+  caddy:
+    image: caddy:alpine
+    restart: unless-stopped
+    depends_on:
+      - bookexchange
+    cap_add:
+      - 'NET_ADMIN'
+    ports:
+      - '3001:3001'
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/site:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+
   bookexchange:
     # depends_on:
     #   - mongo
     image: ghcr.io/beiyanyunyi/bookexchange:main
     container_name: bookexchange
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./Dockerfile
-    ports:
-      - 3000:3001
     volumes:
       - ./.env:/usr/src/app/backend/.env
       - ./log:/usr/src/app/backend/log
@@ -25,3 +32,7 @@ services:
     environment:
       - JWT_SECRETS=114514
       # - MONGO_URL=mongodb://mongo:27017/bookExchange
+
+volumes:
+  caddy_data:
+  caddy_config:
