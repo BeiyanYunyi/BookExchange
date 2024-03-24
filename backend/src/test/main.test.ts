@@ -120,7 +120,7 @@ describe.sequential('main', () => {
       bookId = res.body[0].id;
     });
     describe.concurrent('Permission test', () => {
-      it('Default user unable to get book by id', async ({ expect }) => {
+      it('Default user unable to get book by id (mark it as received)', async ({ expect }) => {
         const res = await api.get(`/api/book/${bookId}`).set('Authorization', `Bearer ${token}`);
         expect(res.status).toBe(401);
       });
@@ -212,15 +212,7 @@ describe.sequential('main', () => {
       bookId = res.body[0].id;
     });
 
-    describe.concurrent('Permission test', () => {
-      it('Admin user should be able to get book by id', async ({ expect }) => {
-        const res = await api
-          .get(`/api/book/${bookId}`)
-          .set('Authorization', `Bearer ${adminToken}`);
-        expect(res.body.id).toBe(bookId);
-        expect(res.body.owner.id).toBe(2);
-        expect(res.status).toBe(200);
-      });
+    describe.sequential('Permission test', () => {
       it('Admin user should be able to mark book as orderable', async ({ expect }) => {
         const res = await api
           .post(`/api/book/ordering`)
@@ -273,10 +265,31 @@ describe.sequential('main', () => {
       expect(res.body.id).toBeTruthy();
       adminBookId = res.body.id;
     });
-    it('Able to mark book as received', async ({ expect }) => {
+    it('Able to receive book before able to order it', async ({ expect }) => {
       const res = await api
         .get(`/api/book/${adminBookId}/receive`)
         .set('Authorization', `Bearer ${adminToken}`);
+      expect(res.status).toBe(200);
+    });
+    it('Able to modify book', async ({ expect }) => {
+      const res = await api
+        .put(`/api/book/${adminBookId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ status: 0 });
+      expect(res.status).toBe(200);
+    });
+    it('Admin user should be able to get book by id (mark book as received)', async ({
+      expect,
+    }) => {
+      const res = await api
+        .get(`/api/book/${adminBookId}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+      expect(res.body.id).toBe(adminBookId);
+      expect(res.body.owner.id).toBe(1);
+      expect(res.status).toBe(200);
+    });
+    it('Able to mark book as orderable', async ({ expect }) => {
+      const res = await api.post(`/api/book/ordering`).set('Authorization', `Bearer ${adminToken}`);
       expect(res.status).toBe(200);
     });
   });
@@ -293,6 +306,45 @@ describe.sequential('main', () => {
         .expect('Content-Type', /json/);
       expect(res.body.token).toBeTruthy();
       token = res.body.token;
+    });
+    it('Not able to order book when did not donate book', async () => {
+      await api.patch(`/api/book/3`).set('Authorization', `Bearer ${token}`).expect(400);
+    });
+    let userBookId: number;
+    it('Able to submit book', async ({ expect }) => {
+      const res = await api
+        .post('/api/book')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          title: '東方文花帖',
+          desc: '东方文花帖',
+          author: 'ZUN',
+          tags: ['东方', 'STG'],
+          img: '',
+        })
+        .expect(201)
+        .expect('Content-Type', /json/);
+      expect(res.body.title).toBe('東方文花帖');
+      expect(res.body.desc).toBe('东方文花帖');
+      expect(res.body.author).toBe('ZUN');
+      expect(res.body.tags).toEqual(['东方', 'STG']);
+      expect(res.body.img).toBe('');
+      expect(res.body.id).toBeTruthy();
+      userBookId = res.body.id;
+      await api.get(`/api/book/${userBookId}`).set('Authorization', `Bearer ${adminToken}`);
+      await api.post(`/api/book/ordering`).set('Authorization', `Bearer ${adminToken}`).expect(200);
+    });
+    it('Not able to order donated book', async () => {
+      await api
+        .patch(`/api/book/${userBookId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(400);
+    });
+    it('Able to order other book', async () => {
+      await api
+        .patch(`/api/book/${adminBookId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
     });
   });
 });
