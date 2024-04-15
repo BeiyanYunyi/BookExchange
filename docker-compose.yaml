@@ -3,7 +3,7 @@ version: '3.4'
 services:
   caddy:
     image: caddy:alpine
-    restart: unless-stopped
+    restart: always
     depends_on:
       - bookexchange
     cap_add:
@@ -21,7 +21,7 @@ services:
     #   - mongo
     image: ghcr.io/beiyanyunyi/bookexchange:main
     container_name: bookexchange
-    restart: unless-stopped
+    restart: always
     build:
       context: .
       dockerfile: ./Dockerfile
